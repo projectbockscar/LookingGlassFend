@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes, { array } from "prop-types";
+import PropTypes from "prop-types";
 import {
   MapContainer,
   TileLayer,
@@ -44,7 +44,7 @@ const redIconFlight = new L.divIcon({
 const FlightMap = (props) => {
   const classes = useStyles();
   const flights = props.flights;
-  console.log(flights);
+  // console.log(flights);
   const markers = flights.map((flight) => {
     const dep_info = flight.departureInfo;
     const dest_info = flight.destinationInfo;
@@ -54,9 +54,9 @@ const FlightMap = (props) => {
         [parseFloat(dep_info.lat), parseFloat(dep_info.lon)],
         [parseFloat(dest_info.lat), parseFloat(dest_info.lon)],
       ];
-      console.log(
-        `departure-${flight.departure}, destination-${flight.destination}`
-      );
+      // console.log(
+      //   `departure-${flight.departure}, destination-${flight.destination}`
+      // );
       return (
         <React.Fragment>
           <Marker

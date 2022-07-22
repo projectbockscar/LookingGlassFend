@@ -68,11 +68,8 @@ const headCells = [
 function EnhancedTableHead(props) {
   const {
     classes,
-    // onSelectAllClick,
     order,
     orderBy,
-    // numSelected,
-    // rowCount,
     onRequestSort,
   } = props;
   const createSortHandler = (property) => (event) => {
@@ -93,8 +90,8 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
-            padding={"default"}
+            align={headCell.numeric ? "center" : "center"}
+            padding={"0px"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -128,8 +125,8 @@ EnhancedTableHead.propTypes = {
 
 const useToolbarStyles = makeStyles((theme) => ({
   root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
+    // paddingLeft: theme.spacing(2),
+    // paddingRight: theme.spacing(1),
   },
   highlight:
     theme.palette.type === "light"
@@ -265,25 +262,6 @@ const UserTable = (props) => {
     setSelected([]);
   };
 
-  //   const handleClick = (event, name) => {
-  //     const selectedIndex = selected.indexOf(name);
-  //     let newSelected = [];
-
-  //     if (selectedIndex === -1) {
-  //       newSelected = newSelected.concat(selected, name);
-  //     } else if (selectedIndex === 0) {
-  //       newSelected = newSelected.concat(selected.slice(1));
-  //     } else if (selectedIndex === selected.length - 1) {
-  //       newSelected = newSelected.concat(selected.slice(0, -1));
-  //     } else if (selectedIndex > 0) {
-  //       newSelected = newSelected.concat(
-  //         selected.slice(0, selectedIndex),
-  //         selected.slice(selectedIndex + 1)
-  //       );
-  //     }
-
-  //     setSelected(newSelected);
-  //   };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -308,12 +286,7 @@ const UserTable = (props) => {
       <Paper className={classes.paper}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
-            aria-label="enhanced table"
-          >
+          <Table>
             <EnhancedTableHead
               classes={classes}
               numSelected={selected.length}
@@ -332,27 +305,15 @@ const UserTable = (props) => {
                     const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (
-                      <TableRow
-                        hover
-                        // onClick={(event) => handleClick(event, row.name)}
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={row.id}
-                        selected={isItemSelected}
-                      >
+                      <TableRow>
                         <TableCell padding="checkbox">
-                          {/* <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                        /> */}
-                          <Avatar
+                          {/* <Avatar
                             alt={row.last_name}
                             className={colors[Math.floor(Math.random() * 3)]}
                             src={`https://randomuser.me/api/portraits/thumb/${(row.gender ==="Male") ? "men": "women"}/${Math.floor(Math.random() * 100)}.jpg`}
                           >
                             {row.last_name.slice(0, 2)}
-                          </Avatar>
+                          </Avatar> */}
                         </TableCell>
                         <TableCell component="th" id={labelId} scope="row">
                           {row.last_name}

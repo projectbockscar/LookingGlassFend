@@ -1,21 +1,20 @@
 import React from "react";
-import PropTypes from "prop-types";
+import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import IconButton from "@material-ui/core/IconButton";
-import InputBase from "@material-ui/core/InputBase";
-import { fade, makeStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
-import SearchIcon from "@material-ui/icons/Search";
-import { Icon } from "@material-ui/core";
-import Flight from "@material-ui/icons/Flight"
+import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
+import moment from "moment";
+import image from "../Images/logo1.png";
+import { TextField } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   header_bar: {
-    backgroundColor: theme.palette.grey[600]
+    backgroundColor: theme.palette.grey[600],
+    justifyContent: "space-around",
   },
   root: {
     flexGrow: 1,
@@ -30,12 +29,13 @@ const useStyles = makeStyles((theme) => ({
       display: "block",
     },
   },
+
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
+    backgroundColor: (theme.palette.common.white, 0.15),
     "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
+      backgroundColor: (theme.palette.common.white, 0.25),
     },
     marginLeft: 0,
     width: "100%",
@@ -44,14 +44,15 @@ const useStyles = makeStyles((theme) => ({
       width: "auto",
     },
   },
-  searchIcon: {
+
+  navBar: {
     padding: theme.spacing(0, 2),
     height: "100%",
     position: "absolute",
     pointerEvents: "none",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
   },
   inputRoot: {
     color: "inherit",
@@ -69,9 +70,14 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
-  icon: {
-      marginRight: theme.spacing(1)
-  }
+  // icon: {
+  //   width: "2rem",
+  //   height: "2rem",
+  //   borderRadius: "50%",
+  //   marginRight: theme.spacing(1),
+  //   display: "block"  ,
+  //     /* Other styles here */
+  // }
 }));
 
 function ElevationScroll(props) {
@@ -90,23 +96,21 @@ function ElevationScroll(props) {
   });
 }
 
-ElevationScroll.propTypes = {
-  children: PropTypes.element.isRequired,
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  window: PropTypes.func,
-};
-
+// const interval = setInterval(function() {
+//   // method to be executed;
+// }, 5000);
 const Header = (props) => {
+  const getCurrentDate = () => {
+    return moment().format("ddd, DD MMMM YYYY");
+  };
+  const { number_of_flights, set_number_of_flights } = props;
+  console.log(number_of_flights);
   const classes = useStyles();
   return (
     <React.Fragment>
-      <CssBaseline />
       <ElevationScroll {...props}>
         <AppBar className={classes.header_bar}>
-          <Toolbar>
+          <Toolbar className={classes.header_bar}>
             <IconButton
               edge="start"
               className={classes.menuButton}
@@ -115,28 +119,28 @@ const Header = (props) => {
             >
               <MenuIcon />
             </IconButton>
-            <Icon className={classes.icon}>
-                <Flight/>
-            </Icon>
+            <IconButton className={classes.icon}>
+              <img src={image} height={40} width={40} />
+            </IconButton>
             <Typography className={classes.title} variant="h6" noWrap>
-              Looking Glass
+              LOOKING GLASS - FOREFLIGHT DISPATCH
             </Typography>
-            {props.lastUpdate && <Typography className={classes.title} variant="caption" noWrap color="textPrimary">
-              {`Last Update ${new Date(props.lastUpdate).toLocaleTimeString()}`}
-            </Typography>}
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                inputProps={{ "aria-label": "search" }}
-              />
-            </div>
+            <Typography variant="body1" noWrap style={{ marginRight: "20px" }}>
+              Flights to Display:
+            </Typography>
+            <TextField
+              value={number_of_flights}
+              style={{ marginRight: "20px" }}
+              onChange={(event) =>
+                set_number_of_flights(parseInt(event.target.value) || 0)
+              }
+            />
+            <Typography className={classes.header_bar} variant="h6" noWrap>
+              <span style={{ marginRight: "1rem", verticalAlign: "middle" }}>
+                <CalendarTodayIcon />
+              </span>
+              <span style={{ marginRight: "1rem" }}>{getCurrentDate()}</span>
+            </Typography>
           </Toolbar>
         </AppBar>
       </ElevationScroll>
