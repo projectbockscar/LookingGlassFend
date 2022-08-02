@@ -14,6 +14,9 @@ import { TextField } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   header_bar: {
     backgroundColor: theme.palette.grey[600],
+    height: "8vh",
+  },
+  header_root: {
     justifyContent: "space-around",
   },
   root: {
@@ -109,7 +112,7 @@ const Header = (props) => {
   return (
     <React.Fragment>
       <ElevationScroll {...props}>
-        <AppBar className={classes.header_bar}>
+        <AppBar classes={{ root: classes.header_bar }} position={"default"}>
           <Toolbar className={classes.header_bar}>
             <IconButton
               edge="start"
@@ -120,7 +123,7 @@ const Header = (props) => {
               <MenuIcon />
             </IconButton>
             <IconButton className={classes.icon}>
-              <img src={image} height={40} width={40} />
+              <img src={image} height={40} width={40} alt="Patch" />
             </IconButton>
             <Typography className={classes.title} variant="h6" noWrap>
               LOOKING GLASS - FOREFLIGHT DISPATCH
@@ -130,12 +133,12 @@ const Header = (props) => {
             </Typography>
             <TextField
               value={number_of_flights}
-              style={{ marginRight: "20px" }}
+              style={{ marginRight: "20px", maxWidth: "30px" }}
               onChange={(event) =>
                 set_number_of_flights(parseInt(event.target.value) || 0)
               }
             />
-            <Typography className={classes.header_bar} variant="h6" noWrap>
+            <Typography variant="h6" noWrap>
               <span style={{ marginRight: "1rem", verticalAlign: "middle" }}>
                 <CalendarTodayIcon />
               </span>
@@ -144,7 +147,6 @@ const Header = (props) => {
           </Toolbar>
         </AppBar>
       </ElevationScroll>
-      <Toolbar />
     </React.Fragment>
   );
 };

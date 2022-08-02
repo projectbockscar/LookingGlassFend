@@ -23,9 +23,12 @@ const useStyles = makeStyles((theme) => ({
     padding: "1rem",
   },
   container: {
-    // height: "100%",
     padding: "1rem",
-    overflowY: "false",
+    overflowY: "auto",
+    height: "86vh",
+  },
+  table: {
+    
   },
 }));
 
@@ -104,7 +107,7 @@ const headCells = [
     numeric: false,
     date: false,
     disablePadding: false,
-    label: "Dispatch Released",
+    label: "Dispatch",
     complex: true,
     align: "left",
   },
@@ -169,26 +172,11 @@ const flights_overlap = (flight1, flight2) => {
   let dt2 = new Date(flight2.departureTime);
   let diff = (dt2 - dt1) / 1000;
   diff /= 60 * 60;
-  if (diff < 1) {
-    return true;
+  if (diff <= 1) {
+    return false;
+  } else {
+    return false;
   }
-  dt1 = new Date(flight1.arrivalTime);
-  dt2 = new Date(flight2.arrivalTime);
-  diff = (dt2 - dt1) / 1000;
-  diff /= 60 * 60;
-  if (diff > 1) {
-    return true;
-  }
-  dt1 = new Date(flight1.departureTime);
-  dt2 = new Date(flight2.arrivalTime);
-  diff = (dt2 - dt1) / 1000;
-  diff /= 60 * 60;
-  if (diff < 0.5) {
-    console.log("YOOOOOOO");
-    return true;
-  }
-  console.log("NOOOOOOO");
-  return false;
 };
 
 //Check Status's of Flight
@@ -229,7 +217,7 @@ const filingStatus = (flight) => {
     };
   } else if (flight.filingStatus === "Cancelled") {
     return {
-      color: "red",
+      color: "#ff4f4f",
       text: "CNX",
       icon: <CancelIcon style={{ color: "#ff4f4f" }} />,
     };
@@ -351,35 +339,45 @@ const App = (props) => {
             }
           }
 
-          flights.push({
-            ...flight,
-            callSign: flight.callSign || "...",
-            aircraftRegistration: flight.aircraftRegistration,
-            aircraftCommander: aircraftCommander || "...",
-            tripId: tripId(flight) || "...",
-            departureTime: departureTime(flight) || "...",
-            arrivalTime: arrivalTime(flight) || "...",
-            flightTime,
-            atcStatus: atcStatus(flight),
-            filingStatus: filingStatus(flight),
-            released: released(flight),
-          });
+          if (
+            departureTime(flight).getTime() <
+            new Date(new Date().getTime() + 3600000 * 48).getTime()
+          ) {
+            flights.push({
+              ...flight,
+              callSign: flight.callSign || "...",
+              aircraftRegistration: flight.aircraftRegistration,
+              aircraftCommander: aircraftCommander || "...",
+              tripId: tripId(flight) || "...",
+              departureTime: departureTime(flight) || "...",
+              arrivalTime: arrivalTime(flight) || "...",
+              flightTime,
+              atcStatus: atcStatus(flight),
+              filingStatus: filingStatus(flight),
+              released: released(flight),
+            });
+          }
         } else {
-          callSigns.add(flight.callSign || "...");
+          if (
+            departureTime(flight).getTime() <
+            new Date(new Date().getTime() + 3600000 * 48).getTime()
+          ) {
+            callSigns.add(flight.callSign || "...");
 
-          flights.push({
-            ...flight,
-            callSign: flight.callSign || "...",
-            aircraftRegistration: flight.aircraftRegistration,
-            aircraftCommander: aircraftCommander || "...",
-            tripId: tripId(flight) || "...",
-            departureTime: departureTime(flight) || "...",
-            arrivalTime: arrivalTime(flight) || "...",
-            flightTime,
-            atcStatus: atcStatus(flight),
-            filingStatus: filingStatus(flight),
-            released: released(flight),
-          });
+            flights.push({
+              ...flight,
+              callSign: flight.callSign || "...",
+              aircraftRegistration: flight.aircraftRegistration,
+              aircraftCommander: aircraftCommander || "...",
+              tripId: tripId(flight) || "...",
+              departureTime: departureTime(flight) || "...",
+              arrivalTime: arrivalTime(flight) || "...",
+              flightTime,
+              atcStatus: atcStatus(flight),
+              filingStatus: filingStatus(flight),
+              released: released(flight),
+            });
+          }
         }
       });
 
@@ -421,17 +419,17 @@ const App = (props) => {
                 <FlightTable
                   rows={filteredFlights}
                   headCells={headCells}
-                  font_variant="body2"
-                />{" "}
-              </Card>{" "}
+                  font_variant="caption"
+                />
+              </Card>
             </Grid>
           ) : (
             <Grid item xs={12}>
               <LoadingCard />
             </Grid>
-          )}{" "}
-        </Grid>{" "}
-      </Container>{" "}
+          )}
+        </Grid>
+      </Container>
       <Footer lastUpdate={lastUpdate} />{" "}
     </Paper>
   );

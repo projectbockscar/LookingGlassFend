@@ -2,6 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
+import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import get_julian_date from "./get_julian_date";
@@ -9,7 +10,7 @@ import HomeIcon from "@material-ui/icons/Home";
 import PublicIcon from "@material-ui/icons/Public";
 import { AccessTime } from "@material-ui/icons";
 import EventIcon from "@material-ui/icons/Event";
-import { createTheme } from "@material-ui/core";
+import { BottomNavigation, createTheme } from "@material-ui/core";
 
 // const theme = createTheme({
 //   palette: {
@@ -99,11 +100,11 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     verticalAlign: "middle",
   },
-  icon_bar: {
-    display: "flex",
-    alignItems: "center",
-    // justifyContent: "center",
-  },
+  // icon_bar: {
+  //   display: "flex",
+  //   alignItems: "center",
+  //   // justifyContent: "center",
+  // },
 }));
 
 function ElevationScroll(props) {
@@ -128,96 +129,94 @@ function ElevationScroll(props) {
 const Footer = (props) => {
   const classes = useStyles();
   return (
-    <React.Fragment>
-      <ElevationScroll {...props}>
-        <AppBar className={classes.footer_bar}>
-          <div>
-            <Toolbar className={classes.AppBar_bar}>
-              {/* <IconButton
-              edge="start"
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="open drawer"
-            >
-              <MenuIcon />
-            </IconButton> */}
-              {/* <Icon className={classes.icon}>
-              <Flight />
-            </Icon>
-            <Typography className={classes.title} variant="h6" noWrap>
-              Looking Glass
-            </Typography> */}
-
-              {/* <Typography className={classes.title} variant="h6" noWrap>
-              Last Update -
-              </Typography> */}
-              {props.lastUpdate && (
-                <Typography
-                  className={classes.icon_bar}
-                  variant="h6"
-                  noWrap
-                  color="textPrimary"
-                >
-                  <AccessTime className={classes.icon} />
-                  {" LAST UPDATE: "}
-                  {` ${new Date(props.lastUpdate).toLocaleTimeString([], {
-                    hour12: false,
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}`}
-                  {"  "}
-                </Typography>
-              )}
-
-              <Typography className={classes.icon_bar} variant="h6" noWrap>
-                <EventIcon className={classes.icon} />
-                J-Day:
-                <span style={{ marginLeft: "1rem" }}>
-                  {get_julian_date(new Date())}
-                </span>
+    <BottomNavigation style={{ height: "8vh" }}>
+      <Grid
+        container
+        justifyContent="space-around"
+        style={{
+          backgroundColor: "#757575",
+          height: "6vh",
+        }}
+        alignItems="center"
+      >
+        {props.lastUpdate && (
+          <Grid
+            item
+            container
+            alignItems="center"
+            spacing={1}
+            xs={2}
+            justifyContent="center"
+          >
+            <Grid item>
+              <AccessTime />
+            </Grid>
+            <Grid item>
+              <Typography
+                className={classes.icon_bar}
+                variant="h6"
+                noWrap
+                color="textPrimary"
+              >
+                {" LAST UPDATE: "}
+                {` ${new Date(props.lastUpdate).toLocaleTimeString([], {
+                  hour12: false,
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}`}
               </Typography>
-
-              {props.lastUpdate && (
-                <Typography
-                  className={classes.icon_bar}
-                  variant="h6"
-                  noWrap
-                  color="textPrimary"
-                >
-                  <PublicIcon className={classes.icon} />{" "}
-                  {`ZULU:  ${new Date(props.lastUpdate).getUTCHours()}`}
-                  {`:${
-                    new Date(props.lastUpdate).getMinutes() < 10 ? "0" : ""
-                  }${new Date(props.lastUpdate).getMinutes()}`}
-                </Typography>
-              )}
-
-              {/* <Typography className={classes.title} variant="h6" noWrap>
-              J-Day  -
+            </Grid>
+          </Grid>
+        )}
+        <Grid
+          item
+          container
+          alignItems="center"
+          spacing={1}
+          xs={2}
+          justifyContent="center"
+        >
+          <Grid item>
+            <EventIcon />
+          </Grid>
+          <Grid item>
+            <Typography className={classes.icon_bar} variant="h6" noWrap>
+              J-Day:
               <span style={{ marginLeft: "1rem" }}>
                 {get_julian_date(new Date())}
               </span>
-            </Typography> */}
-
-              {/* <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>{" "}
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                inputProps={{ "aria-label": "search" }}
-              />{" "}
-            </div> */}
-            </Toolbar>
-          </div>
-        </AppBar>
-      </ElevationScroll>
-      <Toolbar />
-    </React.Fragment>
+            </Typography>
+          </Grid>
+        </Grid>
+        {props.lastUpdate && (
+          <Grid
+            item
+            container
+            alignItems="center"
+            spacing={1}
+            xs={2}
+            justifyContent="center"
+          >
+            <Grid item>
+              <PublicIcon className={classes.icon} />{" "}
+            </Grid>
+            <Grid item>
+              <Typography
+                className={classes.icon_bar}
+                variant="h6"
+                noWrap
+                color="textPrimary"
+              >
+                {`ZULU:  ${new Date(props.lastUpdate).getUTCHours()}`}
+                {`:${
+                  new Date(props.lastUpdate).getMinutes() < 10 ? "0" : ""
+                }${new Date(props.lastUpdate).getMinutes()}`}
+              </Typography>
+            </Grid>
+          </Grid>
+        )}
+      </Grid>
+    </BottomNavigation>
   );
 };
 

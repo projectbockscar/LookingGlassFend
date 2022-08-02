@@ -112,6 +112,9 @@ const useToolbarStyles = makeStyles((theme) => ({
         },
   title: {
     flex: "1 1 100%",
+    textAlign: "left",
+    fontWeight: "bold",
+    fontVariant: "small-caps",
   },
 }));
 
@@ -140,6 +143,7 @@ const EnhancedTableToolbar = (props) => {
           variant="h5"
           id="tableTitle"
           component="div"
+          align="left"
         >
           Flights
         </Typography>
@@ -168,35 +172,26 @@ EnhancedTableToolbar.propTypes = {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    minWidth: "1200px",
-    maxWidth: "100 vw",
-    maxHeight: "84vh",
-    minHeight: "84vh",
-    overflowY: "hidden",
-    overflowX: "hidden",
-    textAlign: "center",
+    maxHeight: "79vh",
   },
   paper: {
-    minWidth: "500px",
-    minHeight: "84vh",
+    maxHeight: "79vh",
+    minHeight: "79vh",
+    // border: "1px solid red",
   },
   table: {
-    minWidth: "600px",
-    maxHeight: "70vh",
-    marginRight: "auto",
-    marginLeft: "auto",
+    // maxHeight: "72vh",
+    // marginRight: "auto",
+    // marginLeft: "auto",
+    overflow: "hidden",
   },
 
-  title: {
-    fontSize: 14,
-    fontFamily: "Roboto",
-    fontWeight: "bold",
-    fontVariant: "underline",
-  },
+  title: {},
+  // row: {
+  //   padding: "0px !important",
+  // },
 
-  main_card: {
-    // backgroundColor: theme.palette.grey[600],
-  },
+  main_card: {},
 }));
 
 // Get UTC time and format it to a dateTime string as a 2 digit hour and 2 digit minute
@@ -211,8 +206,6 @@ function zuluTime(time) {
     return `${hours}:${minutes < 10 ? "0" : ""}${minutes}`;
   }
 }
-
-// const flightTime = `${hours} + ${minutes < 10 ? "0" : ""}${minutes}`;
 
 // Format the JSON date and time  to a dateTime string that is formatted in a 3 digit month and 2 digit day, and a 2 digit hour and 2 digit minute
 //get three digit month and two digit day
@@ -248,17 +241,20 @@ const FlightRow = (props) => {
           <TableCell
             key={headCell.id}
             align={headCell.align ? headCell.align : "center"}
+            style={{ paddingBottom: 4, paddingTop: 4 }}
           >
             {headCell.complex ? (
-              <Grid container spacing={1}>
+              <Grid container wrap="nowrap" alignItems="center">
                 {row[headCell.id]?.icon && (
-                  <Grid item>{row[headCell.id]?.icon}</Grid>
+                  <Grid item style={{ marginRight: "8px", height: "24px" }}>
+                    {row[headCell.id]?.icon}
+                  </Grid>
                 )}
                 {headCell.id === "duplicate_lines" &&
                   Boolean(row.duplicate_lines) &&
                   row[headCell.id]?.length > 0 && (
                     <Grid item>
-                      <Tooltip title="This flight has duplicate lines" arrow>
+                      <Tooltip title="This flight has conflicting data." arrow>
                         <WarningRoundedIcon style={{ color: "#ffd400" }} />
                       </Tooltip>
                     </Grid>
@@ -297,7 +293,7 @@ const FlightRow = (props) => {
             <Box>
               <Grid>
                 <Grid item xs={12}>
-                  <Typography variant="h6"> Conflicting Data</Typography>
+                  <Typography variant="caption"> Conflicting Data</Typography>
                 </Grid>
                 <Grid item>
                   {row.duplicate_lines && (
@@ -359,14 +355,14 @@ const FlightRow = (props) => {
     </React.Fragment>
   );
 };
-//Only show the next 18 flights
+//Only show the next 48hrs of flights
 function showRows(props) {
   const rows = props.rows;
   const headCells = props.headCells;
   const font_variant = props.font_variant;
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [show_rows, set_show_rows] = useState(false);
-  if (rows.length < 18) {
+  if (rows.length > 0) {
     set_show_rows(true);
   }
   return (
@@ -377,7 +373,7 @@ function showRows(props) {
             <Box>
               <Grid>
                 <Grid item xs={12}>
-                  <Typography variant="h1">Flights</Typography>
+                  <Typography>Flights</Typography>
                 </Grid>
                 <Grid item>
                   <TableContainer>
@@ -386,20 +382,17 @@ function showRows(props) {
                         <TableRow>
                           {headCells.map((headCell) => (
                             <TableCell key={headCell.id}>
-                              <Typography variant={font_variant}>
-                                {headCell.text}
-                              </Typography>
+                              <Typography>{headCell.text}</Typography>
                             </TableCell>
                           ))}
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {rows.slice(0, 18).map((row) => (
+                        {rows.slice(0, 20).map((row) => (
                           <FlightRow
                             key={row.flightId}
                             row={row}
                             headCells={headCells}
-                            font_variant={font_variant}
                           />
                         ))}
                       </TableBody>
@@ -426,7 +419,7 @@ const FlightTable = (props) => {
   const rows = props.rows;
   const headCells = props.headCells;
   const font_variant = props.font_variant;
-
+  const next48hrs = Date.now() + 1000 * 60 * 60 * 48;
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -442,6 +435,8 @@ const FlightTable = (props) => {
     setSelected([]);
   };
 
+  //if departureTime is less than 48hrs from now, show the flight
+  //
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -464,7 +459,7 @@ const FlightTable = (props) => {
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
             />
-            <TableBody>
+            <TableBody className={classes.row}>
               {rows &&
                 stableSort(rows, getComparator(order, orderBy))
                   // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -473,9 +468,10 @@ const FlightTable = (props) => {
                     const labelId = `enhanced-table-checkbox-${index}`;
                     return (
                       <FlightRow
+                        className={classes.row}
                         headCells={headCells}
                         {...props}
-                        font_variant={font_variant}
+                        font_variant={"caption"}
                         row={row}
                         key={index}
                       />
