@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
   main_card: {
     backgroundColor: theme.palette.grey[600],
     padding: "1rem",
+    wrap: "nowrap",
   },
   container: {
     padding: "1rem",
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     height: "86vh",
   },
   table: {
-    
+
   },
 }));
 
@@ -256,7 +257,7 @@ const App = (props) => {
   const [set_user_rows] = useState(null);
   const [flight_rows, set_flight_rows] = useState(null);
   const [lastUpdate, set_lastUpdate] = useState(new Date());
-  const [number_of_flights, set_number_of_flights] = useState(10);
+  const [number_of_flights, set_number_of_flights] = useState(20);
 
   useEffect(() => {
     const timer = setInterval(() => {

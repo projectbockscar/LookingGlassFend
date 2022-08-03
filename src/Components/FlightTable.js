@@ -20,8 +20,8 @@ import FilterListIcon from "@material-ui/icons/FilterList";
 import { Grid, Box, Card } from "@material-ui/core";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
 
-//Write a function that only shows flights that are within the next 48 hours
 
+//Decending and Ascending comparators for the table
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -48,6 +48,7 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
+//Table Head Component
 function EnhancedTableHead(props) {
   const headCells = props.headCells;
   const font_variant = props.font_variant;
@@ -88,6 +89,7 @@ function EnhancedTableHead(props) {
   );
 }
 
+//Table Head prototypes
 EnhancedTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
   numSelected: PropTypes.number.isRequired,
@@ -98,6 +100,7 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
+//Styling for toolbar
 const useToolbarStyles = makeStyles((theme) => ({
   root: {},
   highlight:
@@ -172,25 +175,16 @@ EnhancedTableToolbar.propTypes = {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxHeight: "79vh",
+    maxHeight: "79vh", 
   },
   paper: {
     maxHeight: "79vh",
     minHeight: "79vh",
-    // border: "1px solid red",
-  },
+     },
   table: {
-    // maxHeight: "72vh",
-    // marginRight: "auto",
-    // marginLeft: "auto",
-    overflow: "hidden",
-  },
-
+     overflow: "hidden",
+     },
   title: {},
-  // row: {
-  //   padding: "0px !important",
-  // },
-
   main_card: {},
 }));
 
@@ -241,7 +235,7 @@ const FlightRow = (props) => {
           <TableCell
             key={headCell.id}
             align={headCell.align ? headCell.align : "center"}
-            style={{ paddingBottom: 4, paddingTop: 4 }}
+            style={{ paddingBottom: 4, paddingTop: 4, }}
           >
             {headCell.complex ? (
               <Grid container wrap="nowrap" alignItems="center">
@@ -254,7 +248,7 @@ const FlightRow = (props) => {
                   Boolean(row.duplicate_lines) &&
                   row[headCell.id]?.length > 0 && (
                     <Grid item>
-                      <Tooltip title="This flight has conflicting data." arrow>
+                      <Tooltip title="Flights have conflicting data." arrow>
                         <WarningRoundedIcon style={{ color: "#ffd400" }} />
                       </Tooltip>
                     </Grid>
@@ -293,7 +287,7 @@ const FlightRow = (props) => {
             <Box>
               <Grid>
                 <Grid item xs={12}>
-                  <Typography variant="caption"> Conflicting Data</Typography>
+                  <Typography variant="caption">Conflicting Data</Typography>
                 </Grid>
                 <Grid item>
                   {row.duplicate_lines && (
@@ -355,7 +349,7 @@ const FlightRow = (props) => {
     </React.Fragment>
   );
 };
-//Only show the next 48hrs of flights
+
 function showRows(props) {
   const rows = props.rows;
   const headCells = props.headCells;
@@ -408,6 +402,7 @@ function showRows(props) {
   );
 }
 
+//Main Table Component
 const FlightTable = (props) => {
   const classes = useStyles();
   const [order, setOrder] = useState("asc");
@@ -435,8 +430,6 @@ const FlightTable = (props) => {
     setSelected([]);
   };
 
-  //if departureTime is less than 48hrs from now, show the flight
-  //
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
