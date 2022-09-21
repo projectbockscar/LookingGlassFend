@@ -5,11 +5,11 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
+// import MenuIcon from "@material-ui/icons/Menu";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import moment from "moment";
 import image from "../Images/logo1.png";
-import { TextField } from "@material-ui/core";
+// import { TextField } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   header_bar: {
@@ -99,6 +99,19 @@ function ElevationScroll(props) {
   });
 }
 
+//Get the total number of flights from the database
+// const get_number_of_flights = () => {
+//   fetch("http://localhost:5000/flight")
+//     .then((response) => response.json())
+//     .then((data) => {
+//       console.log(get_number_of_flights);
+//       return data.length;
+//     });
+// };
+
+
+
+
 // const interval = setInterval(function() {
 //   // method to be executed;
 // }, 5000);
@@ -106,8 +119,7 @@ const Header = (props) => {
   const getCurrentDate = () => {
     return moment().format("ddd, DD MMMM YYYY");
   };
-  const { number_of_flights, set_number_of_flights } = props;
-  console.log(number_of_flights);
+  const number_of_flights  = 20;
   const classes = useStyles();
   return (
     <React.Fragment>
@@ -120,7 +132,7 @@ const Header = (props) => {
               color="inherit"
               aria-label="open drawer"
             >
-              <MenuIcon />
+              {/* <MenuIcon /> */}
             </IconButton>
             <IconButton className={classes.icon}>
               <img src={image} height={40} width={40} alt="Patch" />
@@ -128,17 +140,18 @@ const Header = (props) => {
             <Typography className={classes.title} variant="h6" noWrap>
               LOOKING GLASS - FOREFLIGHT DISPATCH
             </Typography>
-            <Typography variant="body1" noWrap style={{ marginRight: "20px" }}>
-              Flights to Display:
-            </Typography>
-            <TextField
+            {/* <Typography variant="h6" noWrap style={{ marginRight: "100px" }}>
+              Displaying Next {number_of_flights} Flights 
+            </Typography> */}
+            
+             {/* <TextField
               value={number_of_flights}
               style={{ marginRight: "20px", maxWidth: "30px" }}
               onChange={(event) =>
                 set_number_of_flights(parseInt(event.target.value) || 0)
-              }
-            />
-            <Typography variant="h6" noWrap>
+              } 
+            />  */}
+            <Typography variant="h5" noWrap>
               <span style={{ marginRight: "1rem", verticalAlign: "middle" }}>
                 <CalendarTodayIcon />
               </span>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import PropTypes, { func } from "prop-types";
+import PropTypes from "prop-types";
 import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -19,7 +19,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { Grid, Box, Card } from "@material-ui/core";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
-
+import { Title } from "@material-ui/icons";
 
 //Decending and Ascending comparators for the table
 function descendingComparator(a, b, orderBy) {
@@ -47,6 +47,16 @@ function stableSort(array, comparator) {
   });
   return stabilizedThis.map((el) => el[0]);
 }
+
+//Function to get the total number of flights
+// function GetFlightCount(flights) {
+//   let count = 0;
+//   flights.forEach((flight) => {
+//     count += flight.flightCount;
+//   });
+//   console.log(count);
+//   return  count;
+// }
 
 //Table Head Component
 function EnhancedTableHead(props) {
@@ -161,7 +171,7 @@ const EnhancedTableToolbar = (props) => {
       ) : (
         <Tooltip title="Filter list">
           <IconButton aria-label="filter list">
-            <FilterListIcon />
+            {/* <FilterListIcon /> */}
           </IconButton>
         </Tooltip>
       )}
@@ -175,15 +185,15 @@ EnhancedTableToolbar.propTypes = {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxHeight: "79vh", 
+    maxHeight: "79vh",
   },
   paper: {
     maxHeight: "79vh",
     minHeight: "79vh",
-     },
+  },
   table: {
-     overflow: "hidden",
-     },
+    overflow: "hidden",
+  },
   title: {},
   main_card: {},
 }));
@@ -235,7 +245,7 @@ const FlightRow = (props) => {
           <TableCell
             key={headCell.id}
             align={headCell.align ? headCell.align : "center"}
-            style={{ paddingBottom: 4, paddingTop: 4, }}
+            style={{ paddingBottom: 4, paddingTop: 4 }}
           >
             {headCell.complex ? (
               <Grid container wrap="nowrap" alignItems="center">
@@ -350,57 +360,57 @@ const FlightRow = (props) => {
   );
 };
 
-function showRows(props) {
-  const rows = props.rows;
-  const headCells = props.headCells;
-  const font_variant = props.font_variant;
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [show_rows, set_show_rows] = useState(false);
-  if (rows.length > 0) {
-    set_show_rows(true);
-  }
-  return (
-    <React.Fragment>
-      <TableRow>
-        <TableCell colSpan={12} style={{ paddingBottom: 0, paddingTop: 0 }}>
-          <Collapse in={show_rows} timeout="auto" unmountOnExit>
-            <Box>
-              <Grid>
-                <Grid item xs={12}>
-                  <Typography>Flights</Typography>
-                </Grid>
-                <Grid item>
-                  <TableContainer>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          {headCells.map((headCell) => (
-                            <TableCell key={headCell.id}>
-                              <Typography>{headCell.text}</Typography>
-                            </TableCell>
-                          ))}
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {rows.slice(0, 20).map((row) => (
-                          <FlightRow
-                            key={row.flightId}
-                            row={row}
-                            headCells={headCells}
-                          />
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </Grid>
-              </Grid>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </React.Fragment>
-  );
-}
+// function showRows(props) {
+//   const rows = props.rows;
+//   const headCells = props.headCells;
+//   const font_variant = props.font_variant;
+//   // eslint-disable-next-line react-hooks/rules-of-hooks
+//   const [show_rows, set_show_rows] = useState(false);
+//   if (rows.length > 0) {
+//     set_show_rows(true);
+//   }
+//   return (
+//     <React.Fragment>
+//       <TableRow>
+//         <TableCell colSpan={12} style={{ paddingBottom: 0, paddingTop: 0 }}>
+//           <Collapse in={show_rows} timeout="auto" unmountOnExit>
+//             <Box>
+//               <Grid>
+//                 <Grid item xs={12}>
+//                   <Typography>Flights</Typography>
+//                 </Grid>
+//                 <Grid item>
+//                   <TableContainer>
+//                     <Table>
+//                       <TableHead>
+//                         <TableRow>
+//                           {headCells.map((headCell) => (
+//                             <TableCell key={headCell.id}>
+//                               <Typography>{headCell.text}</Typography>
+//                             </TableCell>
+//                           ))}
+//                         </TableRow>
+//                       </TableHead>
+//                       <TableBody>
+//                         {rows.slice(0, 20).map((row) => (
+//                           <FlightRow
+//                             key={row.flightId}
+//                             row={row}
+//                             headCells={headCells}
+//                           />
+//                         ))}
+//                       </TableBody>
+//                     </Table>
+//                   </TableContainer>
+//                 </Grid>
+//               </Grid>
+//             </Box>
+//           </Collapse>
+//         </TableCell>
+//       </TableRow>
+//     </React.Fragment>
+//   );
+// }
 
 //Main Table Component
 const FlightTable = (props) => {
@@ -477,6 +487,7 @@ const FlightTable = (props) => {
               )} */}
             </TableBody>
           </Table>
+          <Typography variant="h6" align="center">Flights 1 - {rows.length}</Typography>
         </TableContainer>
         {/* <TablePagination
           // rowsPerPageOptions={[15, 20, 25]}
