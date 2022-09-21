@@ -424,6 +424,7 @@ const FlightTable = (props) => {
   const rows = props.rows;
   const headCells = props.headCells;
   const font_variant = props.font_variant;
+  const fonts_size = props.fonts_size;
   const next48hrs = Date.now() + 1000 * 60 * 60 * 48;
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -474,7 +475,7 @@ const FlightTable = (props) => {
                         className={classes.row}
                         headCells={headCells}
                         {...props}
-                        font_variant={"caption"}
+                        font_variant={"h7"}
                         row={row}
                         key={index}
                       />
