@@ -9,6 +9,8 @@ import IconButton from "@material-ui/core/IconButton";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import moment from "moment";
 import image from "../Images/logo1.png";
+import image1 from "../Images/bockscar.PNG";
+
 // import { TextField } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -135,11 +137,16 @@ const Header = (props) => {
               {/* <MenuIcon /> */}
             </IconButton>
             <IconButton className={classes.icon}>
-              <img src={image} height={40} width={40} alt="Patch" />
+              <img src={image} height={60} width={60} alt="Patch" />
+            </IconButton>
+            <IconButton className={classes.icon}>
+              <img src={image1} height={60} width={60} alt="Patch" />
             </IconButton>
             <Typography className={classes.title} variant="h6" noWrap>
               LOOKING GLASS - FOREFLIGHT DISPATCH
+             
             </Typography>
+           
             {/* <Typography variant="h6" noWrap style={{ marginRight: "100px" }}>
               Displaying Next {number_of_flights} Flights 
             </Typography> */}

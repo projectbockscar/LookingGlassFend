@@ -265,24 +265,24 @@ const App = (props) => {
     }, 1000 * 60);
     return () => clearInterval(timer);
   }, [flight_rows]);
-  const getRows = async () => {
-    try {
-      const url = `${process.env.REACT_APP_BACKEND}/get_rows`;
-      const response = await fetch(url, {
-        method: "GET",
-      });
-      // console.log(response)
-      if (!response.ok) {
-        const response_json = await response.json();
-        throw new Error(response_json.message);
-      }
-      const response_json = await response.json();
-      console.log(response_json);
-      set_user_rows(response_json.users);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
+  // const getRows = async () => {
+  //   try {
+  //     const url = `${process.env.REACT_APP_BACKEND}/get_rows`;
+  //     const response = await fetch(url, {
+  //       method: "GET",
+  //     });
+  //     // console.log(response)
+  //     if (!response.ok) {
+  //       const response_json = await response.json();
+  //       throw new Error(response_json.message);
+  //     }
+  //     const response_json = await response.json();
+  //     console.log(response_json);
+  //     set_user_rows(response_json.users);
+  //   } catch (error) {
+  //     console.log(error.message);
+  //   }
+  // };
   const getFlights = async () => {
     try {
       const url = `${process.env.REACT_APP_BACKEND}/dispatch`;
@@ -390,7 +390,7 @@ const App = (props) => {
   };
 
   useEffect(() => {
-    getRows();
+    // getRows();
     getFlights();
   }, [lastUpdate]);
 

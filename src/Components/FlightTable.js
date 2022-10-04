@@ -191,6 +191,27 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: "79vh",
     minHeight: "79vh",
   },
+
+  bottomA: {
+    textAlign: "center",
+    alignContent: "center",
+    display: "flex", /* defines flexbox */
+    flexDirection: "column",/* top to bottom */
+    justifyContent: "space-between",/* first item at start, last at end */
+  },
+
+  bottomB: {
+    fontWeight: "bold",
+    fontSize: "20px",
+    position: "absolute",
+    top: "87%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+  },
+
+  flightCount: {
+    fontWeight: "bold",
+  },
   table: {
     overflow: "hidden",
   },
@@ -488,8 +509,12 @@ const FlightTable = (props) => {
               )} */}
             </TableBody>
           </Table>
-          <Typography variant="h6" align="center">Flights 1 - {rows.length}</Typography>
         </TableContainer>
+        <Box className={classes.bottomA}>
+          <Typography className={classes.bottomB}>
+            Flights 1 - {rows.length}
+          </Typography>
+        </Box>
         {/* <TablePagination
           // rowsPerPageOptions={[15, 20, 25]}
           component="div"
@@ -500,6 +525,7 @@ const FlightTable = (props) => {
           onChangeRowsPerPage={handleChangeRowsPerPage}
         /> */}
       </Paper>
+
       {/* <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
