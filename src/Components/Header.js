@@ -5,13 +5,17 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import IconButton from "@material-ui/core/IconButton";
+
 // import MenuIcon from "@material-ui/icons/Menu";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import moment from "moment";
 import image from "../Images/logo1.png";
 import image1 from "../Images/bockscar.PNG";
+import iosLogo from "../Images/ios.png";
 
 // import { TextField } from "@material-ui/core";
+
+const appleVersion = "15.7";
 
 const useStyles = makeStyles((theme) => ({
   header_bar: {
@@ -111,9 +115,6 @@ function ElevationScroll(props) {
 //     });
 // };
 
-
-
-
 // const interval = setInterval(function() {
 //   // method to be executed;
 // }, 5000);
@@ -121,7 +122,8 @@ const Header = (props) => {
   const getCurrentDate = () => {
     return moment().format("ddd, DD MMMM YYYY");
   };
-  const number_of_flights  = 20;
+
+  const number_of_flights = 20;
   const classes = useStyles();
   return (
     <React.Fragment>
@@ -144,20 +146,30 @@ const Header = (props) => {
             </IconButton>
             <Typography className={classes.title} variant="h6" noWrap>
               LOOKING GLASS - FOREFLIGHT DISPATCH
-             
             </Typography>
-           
+
             {/* <Typography variant="h6" noWrap style={{ marginRight: "100px" }}>
               Displaying Next {number_of_flights} Flights 
             </Typography> */}
-            
-             {/* <TextField
+
+            {/* <TextField
               value={number_of_flights}
               style={{ marginRight: "20px", maxWidth: "30px" }}
               onChange={(event) =>
                 set_number_of_flights(parseInt(event.target.value) || 0)
               } 
             />  */}
+            <IconButton
+              style={{ marginRight: "1rem", paddingBottom: "1rem" }}
+              className={classes.icon}
+            >
+              <img src={iosLogo} height={25} width={25} alt="Patch" />
+            </IconButton>
+            <Typography variant="h6" noWrap>
+              iOS Version {appleVersion}
+              <span style={{ marginRight: "5rem" }}></span>
+            </Typography>
+            <appleVersion />
             <Typography variant="h5" noWrap>
               <span style={{ marginRight: "1rem", verticalAlign: "middle" }}>
                 <CalendarTodayIcon />
