@@ -15,7 +15,7 @@ import iosLogo from "../Images/ios.png";
 
 // import { TextField } from "@material-ui/core";
 
-const appleVersion = "15.7";
+const appleversion = "15.7";
 
 const useStyles = makeStyles((theme) => ({
   header_bar: {
@@ -123,7 +123,8 @@ const Header = (props) => {
     return moment().format("ddd, DD MMMM YYYY");
   };
 
-  const number_of_flights = 20;
+  // const number_of_flights = 20;
+
   const classes = useStyles();
   return (
     <React.Fragment>
@@ -160,16 +161,16 @@ const Header = (props) => {
               } 
             />  */}
             <IconButton
-              style={{ marginRight: "1rem", paddingBottom: "1rem" }}
+              style={{  paddingBottom: "1.2rem" }}
               className={classes.icon}
             >
-              <img src={iosLogo} height={25} width={25} alt="Patch" />
+              <img src={iosLogo} height={23} width={20} alt="Patch" />
             </IconButton>
             <Typography variant="h6" noWrap>
-              iOS Version {appleVersion}
+              EFB iPadOS Version {appleversion}
               <span style={{ marginRight: "5rem" }}></span>
             </Typography>
-            <appleVersion />
+            
             <Typography variant="h5" noWrap>
               <span style={{ marginRight: "1rem", verticalAlign: "middle" }}>
                 <CalendarTodayIcon />

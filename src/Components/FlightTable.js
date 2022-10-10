@@ -512,7 +512,7 @@ const FlightTable = (props) => {
         </TableContainer>
         <Box className={classes.bottomA}>
           <Typography className={classes.bottomB}>
-            Flights 1 - {rows.length}
+         {rows.length > 1 ? "Showing" + " " + rows.length + " ": "Showing" + " " + rows.length + " "} {rows.length === 1 ? "Flight" : "Flights"}
           </Typography>
         </Box>
         {/* <TablePagination
