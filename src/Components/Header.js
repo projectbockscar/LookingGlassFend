@@ -15,7 +15,10 @@ import iosLogo from "../Images/ios.png";
 
 // import { TextField } from "@material-ui/core";
 
-const appleversion = "15.7";
+const appleversion = "16.1.3";
+const dfmVersion = "2023-037-AA";
+const dmmVersion = "2023-037-AA";
+const dfcVersion = "2023-006-AB";
 
 const useStyles = makeStyles((theme) => ({
   header_bar: {
@@ -161,7 +164,7 @@ const Header = (props) => {
               } 
             />  */}
             <IconButton
-              style={{  paddingBottom: "1.2rem" }}
+              style={{ paddingBottom: "1.2rem" }}
               className={classes.icon}
             >
               <img src={iosLogo} height={23} width={20} alt="Patch" />
@@ -170,13 +173,24 @@ const Header = (props) => {
               EFB iPadOS Version {appleversion}
               <span style={{ marginRight: "5rem" }}></span>
             </Typography>
-            
-            <Typography variant="h5" noWrap>
+            <Typography variant="body2">
+              <div>
+                <span>DFM: {dfmVersion}</span>
+              </div>
+              <div>
+                <span>DMM: {dmmVersion}</span>
+              </div>
+              <div>
+                <span>DFC: {dfcVersion}</span>
+              </div>
+            </Typography>
+
+            {/* <Typography variant="h5" noWrap>
               <span style={{ marginRight: "1rem", verticalAlign: "middle" }}>
                 <CalendarTodayIcon />
               </span>
               <span style={{ marginRight: "1rem" }}>{getCurrentDate()}</span>
-            </Typography>
+            </Typography> */}
           </Toolbar>
         </AppBar>
       </ElevationScroll>

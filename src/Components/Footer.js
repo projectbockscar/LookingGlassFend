@@ -11,6 +11,8 @@ import PublicIcon from "@material-ui/icons/Public";
 import { AccessTime } from "@material-ui/icons";
 import EventIcon from "@material-ui/icons/Event";
 import { BottomNavigation, createTheme } from "@material-ui/core";
+import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
+import moment from "moment";
 
 // const theme = createTheme({
 //   palette: {
@@ -127,6 +129,9 @@ function ElevationScroll(props) {
 //   // method to be executed;
 // }, 5000);
 const Footer = (props) => {
+  const getCurrentDate = () => {
+    return moment().format("ddd, DD MMMM YYYY");
+  };
   const classes = useStyles();
   return (
     <BottomNavigation style={{ height: "8vh" }}>
@@ -139,6 +144,14 @@ const Footer = (props) => {
         }}
         alignItems="center"
       >
+        <Grid item>
+          <Typography variant="h5" noWrap>
+            <span style={{ marginRight: "1rem", verticalAlign: "middle" }}>
+              <CalendarTodayIcon />
+            </span>
+            <span style={{ marginRight: "1rem" }}>{getCurrentDate()}</span>
+          </Typography>
+        </Grid>
         {props.lastUpdate && (
           <Grid
             item

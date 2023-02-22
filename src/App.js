@@ -254,7 +254,7 @@ const released = (flight) => {
 };
 
 const App = (props) => {
-  const [set_user_rows] = useState(null);
+  // const [set_user_rows] = useState(null);
   const [flight_rows, set_flight_rows] = useState(null);
   const [lastUpdate, set_lastUpdate] = useState(new Date());
   const [number_of_flights, set_number_of_flights] = useState(20);
