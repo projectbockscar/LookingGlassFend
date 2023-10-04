@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useMemo } from "react";
-import Header from "./Components/Header";
-import Footer from "./Components/Footer";
+import Header from "./components/header";
+import Footer from "./components/footer";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { Card, Container, Grid, Paper } from "@material-ui/core";
 import PendingSharpIcon from "@mui/icons-material/PendingSharp";
 import RunningWithErrorsIcon from "@mui/icons-material/RunningWithErrors";
-import FlightTable from "./Components/FlightTable";
-import LoadingCard from "./Components/LoadingCard";
+import FlightTable from "./components/flightTable";
+import LoadingCard from "./components/loadingCard";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
@@ -29,7 +29,6 @@ const useStyles = makeStyles((theme) => ({
     height: "86vh",
   },
   table: {
-
   },
 }));
 
@@ -139,17 +138,6 @@ const headCells = [
     align: "left",
   },
 ];
-
-// const flightTime = (flight) => {
-//   let dt1 = new Date(flight.departureTime);
-//   let dt2 = new Date(flight.arrivalTime);
-//   let diff = (dt2 - dt1) / 1000;
-//   diff /= 60 * 60;
-//   if (diff < 0) {
-//     return Math.abs(Math.round(diff));
-//   }
-//   return Math.round(diff);
-// };
 
 //Departure Time in local time and Zulu time
 const departureTime = (flight) => {

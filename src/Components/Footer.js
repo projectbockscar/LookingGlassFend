@@ -5,7 +5,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
-import get_julian_date from "./get_julian_date";
+import get_julian_date from "./getJulianDate";
 import HomeIcon from "@material-ui/icons/Home";
 import PublicIcon from "@material-ui/icons/Public";
 import { AccessTime } from "@material-ui/icons";

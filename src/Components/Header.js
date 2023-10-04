@@ -9,13 +9,13 @@ import IconButton from "@material-ui/core/IconButton";
 // import MenuIcon from "@material-ui/icons/Menu";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import moment from "moment";
-import image from "../Images/logo1.png";
-import image1 from "../Images/bockscar.PNG";
-import iosLogo from "../Images/ios.png";
+import image from "../images/logo1.png";
+import image1 from "../images/bockscar.PNG";
+import iosLogo from "../images/ios.png";
 
 // import { TextField } from "@material-ui/core";
 
-const appleversion = "16.1.3";
+const appleversion = "17.0.2";
 const dfmVersion = "2023-037-AA";
 const dmmVersion = "2023-037-AA";
 const dfcVersion = "2023-006-AB";
