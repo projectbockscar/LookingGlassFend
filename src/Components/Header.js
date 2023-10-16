@@ -7,16 +7,15 @@ import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import IconButton from "@material-ui/core/IconButton";
 
 // import MenuIcon from "@material-ui/icons/Menu";
-import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
-import moment from "moment";
 import image from "../images/logo1.png";
 import image1 from "../images/bockscar.PNG";
 import iosLogo from "../images/ios.png";
 
 // import { TextField } from "@material-ui/core";
 
-const appleversion = "17.0.2";
-const dfmVersion = "2023-037-AA";
+// Versions
+const appleversion = "17.0.3";
+const dfmVersion = "2023-263-AB";
 const dmmVersion = "2023-037-AA";
 const dfcVersion = "2023-006-AB";
 
@@ -122,9 +121,9 @@ function ElevationScroll(props) {
 //   // method to be executed;
 // }, 5000);
 const Header = (props) => {
-  const getCurrentDate = () => {
-    return moment().format("ddd, DD MMMM YYYY");
-  };
+  // const getCurrentDate = () => {
+  //   return moment().format("ddd, DD MMMM YYYY");
+  // };
 
   // const number_of_flights = 20;
 

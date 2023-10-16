@@ -62,7 +62,7 @@ function EnhancedTableHead(props) {
   const headCells = props.headCells;
   const font_variant = props.font_variant;
 
-  const { classes, order, orderBy, onRequestSort } = props;
+  const { order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -246,7 +246,7 @@ const FlightRow = (props) => {
   const headCells = props.headCells;
   const [show_row, set_show_row] = useState(false);
   const row = props.row;
-  const classes = useStyles();
+  // const classes = useStyles();
   const font_variant = props.font_variant;
 
   return (
@@ -438,14 +438,14 @@ const FlightTable = (props) => {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
   const [selected, setSelected] = useState([]);
-  const [page, setPage] = useState(0);
-  const [dense, setDense] = useState(true);
-  const [rowsPerPage, setRowsPerPage] = useState(20);
+  // const [page, setPage] = useState(0);
+  // const [dense, setDense] = useState(true);
+  // const [rowsPerPage, setRowsPerPage] = useState(25);
   const rows = props.rows;
   const headCells = props.headCells;
   const font_variant = props.font_variant;
-  const fonts_size = props.fonts_size;
-  const next48hrs = Date.now() + 1000 * 60 * 60 * 48;
+  // const fonts_size = props.fonts_size;
+  // const next48hrs = Date.now() + 1000 * 60 * 60 * 48;
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -489,7 +489,8 @@ const FlightTable = (props) => {
                   // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     // const isItemSelected = isSelected(row.name);
-                    const labelId = `enhanced-table-checkbox-${index}`;
+                    // const labelId = `enhanced-table-checkbox-${index}`;
+                    // console.log("Rows:", rows.length);
                     return (
                       <FlightRow
                         className={classes.row}

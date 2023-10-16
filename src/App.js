@@ -245,7 +245,7 @@ const App = (props) => {
   // const [set_user_rows] = useState(null);
   const [flight_rows, set_flight_rows] = useState(null);
   const [lastUpdate, set_lastUpdate] = useState(new Date());
-  const [number_of_flights, set_number_of_flights] = useState(20);
+  const [number_of_flights, set_number_of_flights] = useState(100);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -308,6 +308,7 @@ const App = (props) => {
         const aircraftCommander = flight.crew.find(
           (crew) => crew.position === "PIC"
         )?.fullname;
+        console.log(aircraftCommander);
 
         if (callSigns.has(flight?.callSign || "...")) {
           for (let i = 0; i < flights.length; i++) {
