@@ -16,8 +16,8 @@ import iosLogo from "../images/ios.png";
 // Versions
 const appleversion = "17.0.3";
 const dfmVersion = "2023-263-AB";
-const dmmVersion = "2023-037-AA";
-const dfcVersion = "2023-006-AB";
+const dmmVersion = "2023-262-AB";
+const dfcVersion = "2023-263-AB";
 
 const useStyles = makeStyles((theme) => ({
   header_bar: {
