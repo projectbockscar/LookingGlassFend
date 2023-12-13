@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
@@ -18,7 +18,6 @@ import Collapse from "@material-ui/core/Collapse";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Grid, Box, Card } from "@material-ui/core";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
-
 
 //Decending and Ascending comparators for the table
 function descendingComparator(a, b, orderBy) {
@@ -47,21 +46,10 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-//Function to get the total number of flights
-// function GetFlightCount(flights) {
-//   let count = 0;
-//   flights.forEach((flight) => {
-//     count += flight.flightCount;
-//   });
-//   console.log(count);
-//   return  count;
-// }
-
 //Table Head Component
 function EnhancedTableHead(props) {
   const headCells = props.headCells;
   const font_variant = props.font_variant;
-
   const { order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -85,11 +73,6 @@ function EnhancedTableHead(props) {
               <Typography variant={font_variant} style={{ fontWeight: "bold" }}>
                 {headCell.label}
               </Typography>
-              {/* {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </span>
-              ) : null} */}
             </TableSortLabel>
           </TableCell>
         ))}
@@ -132,35 +115,22 @@ const useToolbarStyles = makeStyles((theme) => ({
 
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { numSelected } = props;
+  const { numSelected, flightCount } = props;
 
   return (
     <Toolbar
-      className={clsx({
-        [classes.highlight]: numSelected > 0,
-      })}
+      className={clsx(classes.root, { [classes.highlight]: numSelected > 0 })}
     >
-      {numSelected > 0 ? (
-        <Typography
-          className={classes.title}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          className={classes.title}
-          variant="h5"
-          id="tableTitle"
-          component="div"
-          align="left"
-        >
-          Flights
-        </Typography>
-      )}
-
+      <Typography
+        className={classes.title}
+        variant="h5"
+        id="tableTitle"
+        component="div"
+      >
+        {flightCount === 1
+          ? `Flight - Showing ${flightCount}`
+          : `Flights - Showing ${flightCount}`}
+      </Typography>
       {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton aria-label="delete">
@@ -180,39 +150,48 @@ const EnhancedTableToolbar = (props) => {
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  flightCount: PropTypes.number.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxHeight: "79vh",
+    width: "100%",
+    height: "calc(91vh - 200px)", // Adjust for header and footer
+    overflowY: "hidden",
   },
   paper: {
-    maxHeight: "79vh",
-    minHeight: "79vh",
+    width: "100%",
+    height: "100%",
+    overflowY: "hidden",
   },
-
-  bottomA: {
-    textAlign: "center",
-    alignContent: "center",
-    display: "flex", /* defines flexbox */
-    flexDirection: "column",/* top to bottom */
-    justifyContent: "space-between",/* first item at start, last at end */
-  },
-
-  bottomB: {
-    fontWeight: "bold",
-    fontSize: "20px",
-    position: "absolute",
-    top: "87%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-  },
+  tableContainer: (height) => ({
+    overflowY: "auto",
+    paddingBottom: "15px",
+    marginBottom: "15px",
+    height: height, // Dynamic height
+    '&::-webkit-scrollbar': {
+      width: '10px', // Thickness of the scrollbar
+    },
+    '&::-webkit-scrollbar-track': {
+      boxShadow: 'inset 0 0 6px rgba(0,0,0,0.3)', // Style for the track
+      borderRadius: '10px',
+      backgroundColor: theme.palette.grey[400],
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: theme.palette.grey[700], // Color of the scrollbar thumb
+      borderRadius: '10px',
+    },
+  }),
 
   flightCount: {
     fontWeight: "bold",
   },
   table: {
-    overflow: "hidden",
+    overflow: "auto",
+    "&::-webkit-scrollbar": {
+      display: "none",
+    },
+    // scrollbarWidth: "none", // For Firefox
   },
   title: {},
   main_card: {},
@@ -380,92 +359,96 @@ const FlightRow = (props) => {
   );
 };
 
-// function showRows(props) {
-//   const rows = props.rows;
-//   const headCells = props.headCells;
-//   const font_variant = props.font_variant;
-//   // eslint-disable-next-line react-hooks/rules-of-hooks
-//   const [show_rows, set_show_rows] = useState(false);
-//   if (rows.length > 0) {
-//     set_show_rows(true);
-//   }
-//   return (
-//     <React.Fragment>
-//       <TableRow>
-//         <TableCell colSpan={12} style={{ paddingBottom: 0, paddingTop: 0 }}>
-//           <Collapse in={show_rows} timeout="auto" unmountOnExit>
-//             <Box>
-//               <Grid>
-//                 <Grid item xs={12}>
-//                   <Typography>Flights</Typography>
-//                 </Grid>
-//                 <Grid item>
-//                   <TableContainer>
-//                     <Table>
-//                       <TableHead>
-//                         <TableRow>
-//                           {headCells.map((headCell) => (
-//                             <TableCell key={headCell.id}>
-//                               <Typography>{headCell.text}</Typography>
-//                             </TableCell>
-//                           ))}
-//                         </TableRow>
-//                       </TableHead>
-//                       <TableBody>
-//                         {rows.slice(0, 20).map((row) => (
-//                           <FlightRow
-//                             key={row.flightId}
-//                             row={row}
-//                             headCells={headCells}
-//                           />
-//                         ))}
-//                       </TableBody>
-//                     </Table>
-//                   </TableContainer>
-//                 </Grid>
-//               </Grid>
-//             </Box>
-//           </Collapse>
-//         </TableCell>
-//       </TableRow>
-//     </React.Fragment>
-//   );
-// }
-
-//Main Table Component
+// Main Table Component
 const FlightTable = (props) => {
-  const classes = useStyles();
+  const classes = useStyles(); // Call useStyles here
+  const [containerHeight, setContainerHeight] = useState("auto");
+  const mainContainerRef = useRef(null);
+  const tableRef = useRef(null);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
   const [selected, setSelected] = useState([]);
-  // const [page, setPage] = useState(0);
-  // const [dense, setDense] = useState(true);
-  // const [rowsPerPage, setRowsPerPage] = useState(25);
-  const rows = props.rows;
-  const headCells = props.headCells;
-  const font_variant = props.font_variant;
-  // const fonts_size = props.fonts_size;
-  // const next48hrs = Date.now() + 1000 * 60 * 60 * 48;
+  const { rows, headCells, font_variant } = props;
+  const scrollInterval = useRef(null);
+  const calculateHeight = () => {
+    const headerHeight = 200; // Height of header, adjust as needed
+    const footerHeight = 100; // Height of footer, adjust as needed
+    const toolbarHeight = 50; // Add toolbar height if any
+    const additionalPadding = 20; // Any additional padding/margin
+
+    if (mainContainerRef.current) {
+      const windowHeight = window.innerHeight;
+      const dynamicHeight =
+        windowHeight -
+        headerHeight -
+        footerHeight -
+        toolbarHeight -
+        additionalPadding;
+      setContainerHeight(dynamicHeight);
+    }
+  };
+
+  const startScrolling = () => {
+    clearInterval(scrollInterval.current);
+    scrollInterval.current = setInterval(() => {
+      if (tableRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = tableRef.current;
+        if (scrollTop + clientHeight >= scrollHeight - 1) {
+          clearInterval(scrollInterval.current);
+          setTimeout(() => {
+            tableRef.current.scrollTop = 0;
+            setTimeout(startScrolling, 10000); // Delay before starting to scroll again
+          }, 10000); // 10-second delay at the bottom
+        } else {
+          tableRef.current.scrollTop += 1; // Slow scroll increment
+        }
+      }
+    }, 100); // Slow interval
+  };
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
+  useEffect(() => {
+    // Calculate the initial height and set up the resize event listener
+    calculateHeight();
+    window.addEventListener("resize", calculateHeight);
+
+    // Existing functionality for scroll
+    const checkForScroll = () => {
+      if (tableRef.current.scrollHeight > tableRef.current.clientHeight) {
+        setTimeout(startScrolling, 10000); // Initial delay
+      } else {
+        clearInterval(scrollInterval.current);
+      }
+    };
+
+    window.addEventListener("resize", checkForScroll);
+    setTimeout(checkForScroll, 1000); // Delay before first check
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("resize", calculateHeight);
+      clearInterval(scrollInterval.current);
+      window.removeEventListener("resize", checkForScroll);
+    };
+  }, [rows.length]); // Dependency array includes rows.length
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} ref={mainContainerRef}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer className={classes.table}>
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          flightCount={rows.length}
+        />
+        <TableContainer
+          className={classes.tableContainer}
+          style={{ height: containerHeight }} // Apply dynamic height here
+          ref={tableRef}
+        >
           <Table
             aria-labelledby="tableTitle"
             size={"small"}
@@ -479,63 +462,34 @@ const FlightTable = (props) => {
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
             />
             <TableBody className={classes.row}>
               {rows &&
-                stableSort(rows, getComparator(order, orderBy))
-                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {
-                    // const isItemSelected = isSelected(row.name);
-                    // const labelId = `enhanced-table-checkbox-${index}`;
-                    // console.log("Rows:", rows.length);
-                    return (
-                      <FlightRow
-                        className={classes.row}
-                        headCells={headCells}
-                        {...props}
-                        font_variant={"h7"}
-                        row={row}
-                        key={index}
-                      />
-                    );
-                  })}
-              {/* {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={8} />
-                </TableRow>
-              )} */}
+                stableSort(rows, getComparator(order, orderBy)).map(
+                  (row, index) => (
+                    <FlightRow
+                      className={classes.row}
+                      headCells={headCells}
+                      font_variant={font_variant}
+                      row={row}
+                      key={index}
+                    />
+                  )
+                )}
             </TableBody>
           </Table>
         </TableContainer>
-        <Box className={classes.bottomA}>
-          <Typography className={classes.bottomB}>
-         {rows.length > 1 ? "Showing" + " " + rows.length + " ": "Showing" + " " + rows.length + " "} {rows.length === 1 ? "Flight" : "Flights"}
-          </Typography>
-        </Box>
-        {/* <TablePagination
-          // rowsPerPageOptions={[15, 20, 25]}
-          component="div"
-          count={20}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-        /> */}
       </Paper>
-
-      {/* <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      /> */}
     </div>
   );
 };
 
 FlightTable.propTypes = {
   rows: PropTypes.array.isRequired,
+  headCells: PropTypes.array.isRequired,
+  font_variant: PropTypes.string,
 };
 
 export default FlightTable;

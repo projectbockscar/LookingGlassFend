@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef  } from "react";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import makeStyles from "@material-ui/core/styles/makeStyles";
@@ -26,10 +26,8 @@ const useStyles = makeStyles((theme) => ({
   container: {
     padding: "1rem",
     overflowY: "auto",
-    height: "86vh",
   },
-  table: {
-  },
+  table: {},
 }));
 
 const headCells = [
@@ -83,7 +81,7 @@ const headCells = [
     numeric: true,
     date: true,
     disablePadding: false,
-    label: "Time (Local / Zulu)",
+    label: "Departure (Local / Zulu)",
     align: "right",
   },
   {
@@ -91,7 +89,7 @@ const headCells = [
     numeric: true,
     date: false,
     disablePadding: false,
-    label: "Flight Time",
+    label: "Duration",
     align: "right",
   },
   {
@@ -99,7 +97,7 @@ const headCells = [
     numeric: true,
     date: true,
     disablePadding: false,
-    label: "Arrival Time (Local / Zulu)",
+    label: "Arrival (Local / Zulu)",
     align: "right",
   },
   {
@@ -246,6 +244,7 @@ const App = (props) => {
   const [flight_rows, set_flight_rows] = useState(null);
   const [lastUpdate, set_lastUpdate] = useState(new Date());
   const [number_of_flights, set_number_of_flights] = useState(100);
+  const isMounted = useRef(true);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -253,31 +252,19 @@ const App = (props) => {
     }, 1000 * 60);
     return () => clearInterval(timer);
   }, [flight_rows]);
-  // const getRows = async () => {
-  //   try {
-  //     const url = `${process.env.REACT_APP_BACKEND}/get_rows`;
-  //     const response = await fetch(url, {
-  //       method: "GET",
-  //     });
-  //     // console.log(response)
-  //     if (!response.ok) {
-  //       const response_json = await response.json();
-  //       throw new Error(response_json.message);
-  //     }
-  //     const response_json = await response.json();
-  //     console.log(response_json);
-  //     set_user_rows(response_json.users);
-  //   } catch (error) {
-  //     console.log(error.message);
-  //   }
-  // };
+
   const getFlights = async () => {
     try {
       const url = `${process.env.REACT_APP_BACKEND}/dispatch`;
       const response = await fetch(url, {
         method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
       });
-      // console.log(response)
+      console.log(response)
       if (!response.ok) {
         const response_json = await response.json();
         throw new Error(response_json.message);

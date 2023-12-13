@@ -1,101 +1,62 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import IconButton from "@material-ui/core/IconButton";
-
-// import MenuIcon from "@material-ui/icons/Menu";
-import image from "../images/logo1.png";
 import image1 from "../images/bockscar.PNG";
 import iosLogo from "../images/ios.png";
-
-// import { TextField } from "@material-ui/core";
+import OnlinePredictionIcon from "@mui/icons-material/OnlinePrediction";
 
 // Versions
-const appleversion = "17.0.3";
-const dfmVersion = "2023-263-AB";
-const dmmVersion = "2023-262-AB";
-const dfcVersion = "2023-263-AB";
+const appleversion = "17.2";
+const dfmVersion = "2023-263-BG";
+const dmmVersion = "2023-320-AC";
+const dfcVersion = "2023-263-BG";
 
 const useStyles = makeStyles((theme) => ({
   header_bar: {
     backgroundColor: theme.palette.grey[600],
-    height: "8vh",
+    height: "110px",
+    justifyContent: "space-between",
+    boxShadow: "5px -2px 5px 2px rgba(0,0,0,0.9)",
   },
-  header_root: {
-    justifyContent: "space-around",
-  },
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-    display: "none",
-    [theme.breakpoints.up("sm")]: {
-      display: "block",
-    },
-  },
-
-  search: {
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: (theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: (theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(1),
-      width: "auto",
-    },
-  },
-
-  navBar: {
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
+  leftSide: {
     display: "flex",
     alignItems: "center",
-    justifyContent: "space-between",
   },
-  inputRoot: {
-    color: "inherit",
+  rightSide: {
+    display: "flex",
+    alignItems: "center",
   },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      width: "12ch",
-      "&:focus": {
-        width: "20ch",
-      },
-    },
+  logo: {
+    marginLeft: "1.5rem",
   },
-  // icon: {
-  //   width: "2rem",
-  //   height: "2rem",
-  //   borderRadius: "50%",
-  //   marginRight: theme.spacing(1),
-  //   display: "block"  ,
-  //     /* Other styles here */
-  // }
+  title: {
+    marginLeft: "2rem",
+  },
+  iosVersion: {
+    marginLeft: "0.3rem",
+    marginRight: "3rem",
+  },
+  manuals: {
+    marginRight: "3rem",
+  },
+  onlineStatus: {
+    marginLeft: "2rem",
+    transform: "scale(1.3, 1.3)",
+  },
+  online: {
+    color: "#20de07",
+  },
+  offline: {
+    color: "#FF0000", // red
+  },
 }));
 
 function ElevationScroll(props) {
   const { children, window } = props;
-  // Note that you normally won't need to set the window ref as useScrollTrigger
-  // will default to window.
-  // This is only being set here because the demo is in an iframe.
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: 0,
@@ -107,93 +68,59 @@ function ElevationScroll(props) {
   });
 }
 
-//Get the total number of flights from the database
-// const get_number_of_flights = () => {
-//   fetch("http://localhost:5000/flight")
-//     .then((response) => response.json())
-//     .then((data) => {
-//       console.log(get_number_of_flights);
-//       return data.length;
-//     });
-// };
-
-// const interval = setInterval(function() {
-//   // method to be executed;
-// }, 5000);
 const Header = (props) => {
-  // const getCurrentDate = () => {
-  //   return moment().format("ddd, DD MMMM YYYY");
-  // };
-
-  // const number_of_flights = 20;
-
   const classes = useStyles();
+
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+  useEffect(() => {
+    const updateOnlineStatus = () => setIsOnline(navigator.onLine);
+
+    window.addEventListener("online", updateOnlineStatus);
+    window.addEventListener("offline", updateOnlineStatus);
+
+    // Cleanup event listeners on component unmount
+    return () => {
+      window.removeEventListener("online", updateOnlineStatus);
+      window.removeEventListener("offline", updateOnlineStatus);
+    };
+  }, []);
   return (
-    <React.Fragment>
-      <ElevationScroll {...props}>
-        <AppBar classes={{ root: classes.header_bar }} position={"default"}>
-          <Toolbar className={classes.header_bar}>
-            <IconButton
-              edge="start"
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="open drawer"
-            >
-              {/* <MenuIcon /> */}
+    <ElevationScroll {...props}>
+      <AppBar position={"default"}>
+        <Toolbar className={classes.header_bar}>
+          <div className={classes.leftSide}>
+            <IconButton className={classes.logo}>
+              <img src={image1} height={80} width={80} alt="Patch" />
             </IconButton>
-            <IconButton className={classes.icon}>
-              <img src={image} height={60} width={60} alt="Patch" />
-            </IconButton>
-            <IconButton className={classes.icon}>
-              <img src={image1} height={60} width={60} alt="Patch" />
-            </IconButton>
-            <Typography className={classes.title} variant="h6" noWrap>
-              LOOKING GLASS - FOREFLIGHT DISPATCH
+            <Typography className={classes.title} variant="h4" noWrap>
+              LOOKING GLASS
             </Typography>
-
-            {/* <Typography variant="h6" noWrap style={{ marginRight: "100px" }}>
-              Displaying Next {number_of_flights} Flights 
-            </Typography> */}
-
-            {/* <TextField
-              value={number_of_flights}
-              style={{ marginRight: "20px", maxWidth: "30px" }}
-              onChange={(event) =>
-                set_number_of_flights(parseInt(event.target.value) || 0)
-              } 
-            />  */}
             <IconButton
-              style={{ paddingBottom: "1.2rem" }}
-              className={classes.icon}
+              className={`${classes.onlineStatus} ${
+                isOnline ? classes.online : classes.offline
+              }`}
             >
-              <img src={iosLogo} height={23} width={20} alt="Patch" />
+              <OnlinePredictionIcon />
             </IconButton>
-            <Typography variant="h6" noWrap>
+          </div>
+          <div className={classes.rightSide}>
+            <IconButton>
+              <img src={iosLogo} height={20} width={20} alt="iOS Logo" />
+            </IconButton>
+            <Typography className={classes.iosVersion} variant="h6" noWrap>
               EFB iPadOS Version {appleversion}
-              <span style={{ marginRight: "5rem" }}></span>
             </Typography>
-            <Typography variant="body2">
-              <div>
-                <span>DFM: {dfmVersion}</span>
-              </div>
-              <div>
-                <span>DMM: {dmmVersion}</span>
-              </div>
-              <div>
-                <span>DFC: {dfcVersion}</span>
-              </div>
+            <Typography className={classes.manuals} variant="body2">
+              DFM: {dfmVersion} <br />
+              DMM: {dmmVersion} <br />
+              DFC: {dfcVersion}
             </Typography>
-
-            {/* <Typography variant="h5" noWrap>
-              <span style={{ marginRight: "1rem", verticalAlign: "middle" }}>
-                <CalendarTodayIcon />
-              </span>
-              <span style={{ marginRight: "1rem" }}>{getCurrentDate()}</span>
-            </Typography> */}
-          </Toolbar>
-        </AppBar>
-      </ElevationScroll>
-    </React.Fragment>
+          </div>
+        </Toolbar>
+      </AppBar>
+    </ElevationScroll>
   );
 };
+
 export default Header;
