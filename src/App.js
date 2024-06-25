@@ -1,14 +1,17 @@
-import React, { useEffect, useState, useMemo, useRef  } from "react";
-import Header from "./components/header";
+import React, { useEffect, useState, useCallback } from "react";
 import Footer from "./components/footer";
+import Header from "./components/header";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { Card, Container, Grid, Paper } from "@material-ui/core";
-import PendingSharpIcon from "@mui/icons-material/PendingSharp";
 import RunningWithErrorsIcon from "@mui/icons-material/RunningWithErrors";
 import FlightTable from "./components/flightTable";
 import LoadingCard from "./components/loadingCard";
+// import GetVersions from "./components/getVersions";
+import { createClient } from 'contentful';
+// Icons
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import PendingSharpIcon from "@mui/icons-material/PendingSharp";
 
 const useStyles = makeStyles((theme) => ({
   page_background: {
@@ -22,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.grey[600],
     padding: "1rem",
     wrap: "nowrap",
+    marginTop: "1rem",
   },
   container: {
     padding: "1rem",
@@ -127,14 +131,14 @@ const headCells = [
     complex: true,
     align: "left",
   },
-  {
-    id: "duplicate_lines",
-    numeric: false,
-    disablePadding: false,
-    label: "Conflicts",
-    complex: true,
-    align: "left",
-  },
+  // {
+  //   id: "duplicate_lines",
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: "Conflicts",
+  //   complex: true,
+  //   align: "left",
+  // },
 ];
 
 //Departure Time in local time and Zulu time
@@ -143,6 +147,7 @@ const departureTime = (flight) => {
   return date;
 };
 
+//Arival Time in local time and Zulu time
 const arrivalTime = (flight) => {
   return new Date(flight.arrivalTime);
 };
@@ -166,7 +171,7 @@ const flights_overlap = (flight1, flight2) => {
   }
 };
 
-//Check Status's of Flight
+//Checks ATC status 
 const atcStatus = (flight) => {
   if (flight.atcStatus === "Acknowledged") {
     return {
@@ -195,6 +200,7 @@ const atcStatus = (flight) => {
   }
 };
 
+//Checks filing status
 const filingStatus = (flight) => {
   if (flight.filingStatus === "Filed") {
     return {
@@ -223,6 +229,7 @@ const filingStatus = (flight) => {
   }
 };
 
+//Checks release status
 const released = (flight) => {
   if (flight.released === true) {
     return {
@@ -240,20 +247,47 @@ const released = (flight) => {
 };
 
 const App = (props) => {
-  // const [set_user_rows] = useState(null);
   const [flight_rows, set_flight_rows] = useState(null);
   const [lastUpdate, set_lastUpdate] = useState(new Date());
   const [number_of_flights, set_number_of_flights] = useState(100);
-  const isMounted = useRef(true);
+  //  This function is used for the hard coding of versions.
+  // const [versions, setVersions] = useState({
+  //   iosVersion: 'Loading...',
+  //   dfmVersion: 'Loading...',
+  //   dmmVersion: 'Loading...',
+  //   dfcVersion: 'Loading...'
+  // });
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      set_lastUpdate(new Date());
-    }, 1000 * 60);
-    return () => clearInterval(timer);
-  }, [flight_rows]);
+  // useEffect(() => {
+  //   const client = createClient({
+  //     space: 'gush6s9fs1up',
+  //     accessToken: 'w7YEK76BONLbrcqWGhFONNUVbmpZIHQmWUrWL2BaXoc'
+  //   });
 
-  const getFlights = async () => {
+  //   client.getEntries({
+  //     content_type: 'versionUpdates'
+  //   })
+  //   .then((response) => {
+  //     const fields = response.items[0].fields;
+  //     setVersions({
+  //       iosVersion: fields.iosVersion || 'Default iOS Version',
+  //       dfmVersion: fields.dfmVersion || 'Default DFM Version',
+  //       dmmVersion: fields.dmmVersion || 'Default DMM Version',
+  //       dfcVersion: fields.dfcVersion || 'Default DFC Version'
+  //     });
+  //   })
+  //   .catch((error) => console.log(error));
+  // }, []);
+
+  const classes = useStyles();
+
+  // const handleVersionsFetched = useCallback((fetchedVersions) => {
+  //   console.log("Fetched Versions:", fetchedVersions);
+  //   setVersions(fetchedVersions);
+  // }, []);
+
+//Gets the flight data 
+  const getFlights = useCallback(async () => {
     try {
       const url = `${process.env.REACT_APP_BACKEND}/dispatch`;
       const response = await fetch(url, {
@@ -264,7 +298,7 @@ const App = (props) => {
           "Access-Control-Allow-Origin": "*",
         },
       });
-      console.log(response)
+      console.log(response);
       if (!response.ok) {
         const response_json = await response.json();
         throw new Error(response_json.message);
@@ -310,7 +344,6 @@ const App = (props) => {
               } else {
                 flights[i].duplicate_lines = [flight];
               }
-
               console.log("found", flight);
               return;
             }
@@ -363,34 +396,35 @@ const App = (props) => {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, []);
+
+  //Refresh flight data every 5 minutes
+  useEffect(() => {
+    getFlights();
+  }, [getFlights, lastUpdate]); // Remove lastUpdate if not necessary for triggering getFlights
 
   useEffect(() => {
-    // getRows();
-    getFlights();
-  }, [lastUpdate]);
+    const timer = setInterval(() => {
+      set_lastUpdate(new Date());
+    }, 1000 * 60 * 5); // Adjust the interval as needed
 
-  const filteredFlights = useMemo(() => {
-    if (flight_rows) {
-      const temp_flights = [...flight_rows].splice(0, number_of_flights);
-      return temp_flights;
-    } else {
-      return [];
-    }
-  }, [flight_rows, number_of_flights]);
-  console.log(filteredFlights);
+    return () => clearInterval(timer);
+  }, []);
 
-  const classes = useStyles();
+  const filteredFlights = flight_rows?.slice(0, number_of_flights) || [];
+
   return (
     <Paper className={classes.page_background}>
+      {/* <GetVersions onVersionsFetched={handleVersionsFetched} /> */}
       <Header
+        // versions={versions}
         lastUpdate={lastUpdate}
         number_of_flights={number_of_flights}
         set_number_of_flights={set_number_of_flights}
       />
       <Container className={classes.container} maxWidth={false}>
         <Grid>
-          {filteredFlights ? (
+          {filteredFlights.length > 0 ? (
             <Grid item xs={12} xl={12}>
               <Card elevation={5} className={classes.main_card}>
                 <FlightTable
@@ -407,7 +441,7 @@ const App = (props) => {
           )}
         </Grid>
       </Container>
-      <Footer lastUpdate={lastUpdate} />{" "}
+      <Footer lastUpdate={lastUpdate} />
     </Paper>
   );
 };

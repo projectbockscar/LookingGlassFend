@@ -8,13 +8,16 @@ import IconButton from "@material-ui/core/IconButton";
 import image1 from "../images/bockscar.PNG";
 import iosLogo from "../images/ios.png";
 import OnlinePredictionIcon from "@mui/icons-material/OnlinePrediction";
+import { createClient } from "contentful";
 
-// Versions
-const appleversion = "17.2";
-const dfmVersion = "2023-263-BG";
-const dmmVersion = "2023-320-AC";
-const dfcVersion = "2023-263-BG";
+// Example: Versions for hard code compatibility if needed 
+// const appleVersion = "17.5";
+// const dfmVersion = "2023-263-BG";
+// const dmmVersion = "2023-320-AC";
+// const dfcVersion = "2023-263-BG";
+// Then remove/mute the API calls
 
+// Styles
 const useStyles = makeStyles((theme) => ({
   header_bar: {
     backgroundColor: theme.palette.grey[600],
@@ -31,20 +34,28 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   logo: {
-    marginLeft: "1.5rem",
+    marginLeft: "1rem",
   },
   title: {
     marginLeft: "2rem",
+    fontFamily: "Yellowtail, cursive",
+    fontSize: "2.2rem",
+    [theme.breakpoints.down(1370)]: { // Use 'sm' breakpoint for iPad-sized screens
+      fontSize: '1.7rem', // Adjust font size on smaller screens
+    },
   },
   iosVersion: {
     marginLeft: "0.3rem",
     marginRight: "3rem",
+    [theme.breakpoints.down(1370)]: { // Use 'sm' breakpoint for iPad-sized screens
+      fontSize: '1rem', // Adjust font size on smaller screens
+    },
   },
   manuals: {
     marginRight: "3rem",
   },
   onlineStatus: {
-    marginLeft: "2rem",
+    marginLeft: "1.2rem",
     transform: "scale(1.3, 1.3)",
   },
   online: {
@@ -55,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// Elevation Scroll
 function ElevationScroll(props) {
   const { children, window } = props;
   const trigger = useScrollTrigger({
@@ -68,23 +80,64 @@ function ElevationScroll(props) {
   });
 }
 
+// Versions are loaded from Contentful here
 const Header = (props) => {
   const classes = useStyles();
-
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [versions, setVersions] = useState({
+    iosVersion: "Loading...",
+    dfmVersion: "Loading...",
+    dmmVersion: "Loading...",
+    dfcVersion: "Loading...",
+  });
 
+  const fetchVersions = () => {
+    const client = createClient({
+      space: "38r6hx96tbyw",
+      accessToken: "ZZck2gzwq1bu0TmzDXyRcDA4bZJzh5BoY19XqhpnbBU",
+    });
+
+    client
+      .getEntries({
+        content_type: "versionUpdates",
+      })
+      .then((response) => {
+        const fields = response.items[0].fields;
+        setVersions({
+          iosVersion: fields.iosVersion || "Default iOS Version",
+          dfmVersion: fields.dfmVersion || "Default DFM Version",
+          dmmVersion: fields.dmmVersion || "Default DMM Version",
+          dfcVersion: fields.dfcVersion || "Default DFC Version",
+        });
+      })
+      .catch((error) => console.error(error));
+  };
+
+  useEffect(() => {
+    // Initial fetch
+    fetchVersions();
+
+    // Set interval to fetch every 10 minutes
+    const interval = setInterval(fetchVersions, 60000); // 1 minutes in milliseconds
+   
+    // Cleanup interval on component unmount
+    return () => clearInterval(interval);
+  }, []);
+
+  // Online Status; Online event listener, shows if the app is online or offline
   useEffect(() => {
     const updateOnlineStatus = () => setIsOnline(navigator.onLine);
 
     window.addEventListener("online", updateOnlineStatus);
     window.addEventListener("offline", updateOnlineStatus);
 
-    // Cleanup event listeners on component unmount
     return () => {
       window.removeEventListener("online", updateOnlineStatus);
       window.removeEventListener("offline", updateOnlineStatus);
     };
   }, []);
+
+  // This is the items displayed in the header
   return (
     <ElevationScroll {...props}>
       <AppBar position={"default"}>
@@ -93,7 +146,7 @@ const Header = (props) => {
             <IconButton className={classes.logo}>
               <img src={image1} height={80} width={80} alt="Patch" />
             </IconButton>
-            <Typography className={classes.title} variant="h4" noWrap>
+            <Typography className={classes.title} noWrap>
               LOOKING GLASS
             </Typography>
             <IconButton
@@ -101,20 +154,21 @@ const Header = (props) => {
                 isOnline ? classes.online : classes.offline
               }`}
             >
+              <div>- &nbsp;</div>
               <OnlinePredictionIcon />
             </IconButton>
           </div>
           <div className={classes.rightSide}>
             <IconButton>
-              <img src={iosLogo} height={20} width={20} alt="iOS Logo" />
+              <img src={iosLogo} height={25} width={22} alt="iOS Logo" />
             </IconButton>
             <Typography className={classes.iosVersion} variant="h6" noWrap>
-              EFB iPadOS Version {appleversion}
+              iOS Version: {versions.iosVersion}
             </Typography>
             <Typography className={classes.manuals} variant="body2">
-              DFM: {dfmVersion} <br />
-              DMM: {dmmVersion} <br />
-              DFC: {dfcVersion}
+              DFM: {versions.dfmVersion} <br />
+              DMM: {versions.dmmVersion} <br />
+              DFC: {versions.dfcVersion}
             </Typography>
           </div>
         </Toolbar>

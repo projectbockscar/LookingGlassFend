@@ -9,20 +9,27 @@ import { BottomNavigation } from "@material-ui/core";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import moment from "moment";
 
+//Styles
 const useStyles = makeStyles((theme) => ({
   elegantFont: {
     fontFamily: '"Playfair Display", serif',
+    [theme.breakpoints.down(1370)]: { // Use 'sm' breakpoint for iPad-sized screens
+      fontSize: '0.7rem', // Adjust font size on smaller screens
+    },
   },
   footerContainer: {
     backgroundColor: theme.palette.grey[600],
     height: "100px",
     width: "100%",
-    paddingRight: "500px",
     position: "fixed", // Position fixed to make it stick at the bottom
     bottom: 0, // Align to the bottom
     left: 0, // Align to the left
     zIndex: 1000, // Ensure it's above other elements
     boxShadow: "0px -2px 5px 0px rgba(0,0,0,0.5)",
+    [theme.breakpoints.down('sm')]: {
+      height: "120px", // Increase height on smaller screens to accommodate content
+      paddingRight: "0", // Remove extra padding on smaller screens
+    },
   },
   poweredBy: {
     backgroundColor: "lightgrey",
@@ -32,8 +39,13 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     color: "black",
     boxShadow: "0px 0px 8px 0px rgba(0,0,0,0.7)",
-    marginRight: "-150px",
+    marginRight: "-120px",
     marginLeft: "40px",
+    [theme.breakpoints.down('sm')]: {
+      marginRight: "0", // Remove negative margin on smaller screens
+      marginLeft: "10px", // Adjust left margin on smaller screens
+      fontSize: '0.6rem', // Adjust font size on smaller screens
+    },
   },
   dateTimeDisplay: {
     display: "flex",
@@ -41,21 +53,16 @@ const useStyles = makeStyles((theme) => ({
     "& > svg": {
       marginRight: theme.spacing(1),
     },
-  },
-  [theme.breakpoints.down("xs")]: {
-    dateTimeDisplay: {
-      fontSize: "0.8rem",
-    },
-    footerContainer: {
-      height: "10vh",
+    [theme.breakpoints.down(1370)]: {
+      fontSize: "0.8rem", // Adjust font size on smaller screens
     },
   },
 }));
 
+//Footer
 const Footer = (props) => {
   const getCurrentDate = () => moment().format("ddd, DD MMM YYYY");
   const classes = useStyles();
-
   return (
     <BottomNavigation className={classes.footerContainer}>
       <Grid container direction="row" alignItems="center">
@@ -71,7 +78,6 @@ const Footer = (props) => {
             BOCKSCAR
           </Typography>
         </Grid>
-
         <Grid
           item
           xs

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
+
+//MUI imports
 import { lighten, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -12,12 +14,82 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import Collapse from "@material-ui/core/Collapse";
-import DeleteIcon from "@material-ui/icons/Delete";
 import { Grid, Box, Card } from "@material-ui/core";
+
+//Icons
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
+
+
+
+//Styling for table
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: "100%",
+    height: "calc(91vh - 200px)", // Adjust for header and footer
+    overflowY: "hidden",
+    alignItems: "center",
+  },
+  paper: {
+    width: "100%",
+    alignItems: "center",
+    overflowY: "auto",
+  },
+  tableContainer: (height) => ({
+    overflowY: "auto",
+    // paddingBottom: "15px",
+    // marginBottom: "15px",
+    // height: height, // Dynamic height
+    '&::-webkit-scrollbar': {
+      width: '12px', // Thickness of the scrollbar
+    },
+    '&::-webkit-scrollbar-track': {
+      backgroundColor: "#303030",
+      
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: theme.palette.grey[700], // Color of the scrollbar thumb
+      borderRadius: '4px',
+    },
+  }),
+
+  flightCount: {
+    fontWeight: "bold",
+  },
+  table: {
+    overflow: "auto",
+    "&::-webkit-scrollbar": {
+      display: "none",
+    },
+    // scrollbarWidth: "none", // For Firefox
+  },
+  title: {},
+  main_card: {},
+}));
+
+//Styling for toolbar
+const useToolbarStyles = makeStyles((theme) => ({
+  root: {},
+  highlight:
+    theme.palette.type === "light"
+      ? {
+          color: theme.palette.secondary.main,
+          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+        }
+      : {
+          color: theme.palette.text.primary,
+          backgroundColor: theme.palette.secondary.dark,
+        },
+  title: {
+    flex: "1 1 100%",
+    textAlign: "left",
+    fontWeight: "bold",
+    fontVariant: "small-caps",
+  },
+}));
 
 //Decending and Ascending comparators for the table
 function descendingComparator(a, b, orderBy) {
@@ -92,27 +164,6 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-//Styling for toolbar
-const useToolbarStyles = makeStyles((theme) => ({
-  root: {},
-  highlight:
-    theme.palette.type === "light"
-      ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
-      : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
-  title: {
-    flex: "1 1 100%",
-    textAlign: "left",
-    fontWeight: "bold",
-    fontVariant: "small-caps",
-  },
-}));
-
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
   const { numSelected, flightCount } = props;
@@ -152,50 +203,6 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
   flightCount: PropTypes.number.isRequired,
 };
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-    height: "calc(91vh - 200px)", // Adjust for header and footer
-    overflowY: "hidden",
-  },
-  paper: {
-    width: "100%",
-    height: "100%",
-    overflowY: "hidden",
-  },
-  tableContainer: (height) => ({
-    overflowY: "auto",
-    paddingBottom: "15px",
-    marginBottom: "15px",
-    height: height, // Dynamic height
-    '&::-webkit-scrollbar': {
-      width: '10px', // Thickness of the scrollbar
-    },
-    '&::-webkit-scrollbar-track': {
-      boxShadow: 'inset 0 0 6px rgba(0,0,0,0.3)', // Style for the track
-      borderRadius: '10px',
-      backgroundColor: theme.palette.grey[400],
-    },
-    '&::-webkit-scrollbar-thumb': {
-      backgroundColor: theme.palette.grey[700], // Color of the scrollbar thumb
-      borderRadius: '10px',
-    },
-  }),
-
-  flightCount: {
-    fontWeight: "bold",
-  },
-  table: {
-    overflow: "auto",
-    "&::-webkit-scrollbar": {
-      display: "none",
-    },
-    // scrollbarWidth: "none", // For Firefox
-  },
-  title: {},
-  main_card: {},
-}));
 
 // Get UTC time and format it to a dateTime string as a 2 digit hour and 2 digit minute
 function zuluTime(time) {
