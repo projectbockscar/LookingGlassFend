@@ -5,8 +5,8 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import IconButton from "@material-ui/core/IconButton";
-import image1 from "../images/bockscar.PNG";
-import iosLogo from "../images/ios.png";
+import image1 from "../Images/bockscar.PNG";
+import iosLogo from "../Images/ios.png";
 import OnlinePredictionIcon from "@mui/icons-material/OnlinePrediction";
 import { createClient } from "contentful";
 

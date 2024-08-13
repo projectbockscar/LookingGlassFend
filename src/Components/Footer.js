@@ -8,6 +8,8 @@ import EventIcon from "@material-ui/icons/Event";
 import { BottomNavigation } from "@material-ui/core";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import moment from "moment";
+import LeidosLogo from "../Images/LeidosLogo.png";
+import IconButton from "@material-ui/core/IconButton";
 
 //Styles
 const useStyles = makeStyles((theme) => ({
@@ -32,7 +34,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   poweredBy: {
-    backgroundColor: "lightgrey",
+    //backgroundColor: "lightgrey",
+    background: "linear-gradient(to right, #cfa54e, #aec1ce)",
     borderRadius: "5px",
     padding: "5px",
     border: "1px solid black",
@@ -57,6 +60,18 @@ const useStyles = makeStyles((theme) => ({
       fontSize: "0.8rem", // Adjust font size on smaller screens
     },
   },
+
+  middleSide: {
+    display: "flex",
+    marginLeft: "-120px",
+    marginRight: "20px",
+
+    [theme.breakpoints.down('sm')]: {
+      marginRight: "0", // Remove negative margin on smaller screens
+      marginLeft: "10px", // Adjust left margin on smaller screens
+    },
+  },
+
 }));
 
 //Footer
@@ -118,6 +133,13 @@ const Footer = (props) => {
           )}
         </Grid>
       </Grid>
+
+      <div className={classes.middleSide}>
+            <IconButton className={classes.logo}>
+              <img src={LeidosLogo} height={45} width={100} alt="Patch" />
+            </IconButton>
+          </div>
+
     </BottomNavigation>
   );
 };

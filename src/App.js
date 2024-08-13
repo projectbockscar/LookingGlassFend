@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react";
-import Footer from "./components/footer";
-import Header from "./components/header";
+import Footer from "./Components/Footer";
+import Header from "./Components/Header";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { Card, Container, Grid, Paper } from "@material-ui/core";
 import RunningWithErrorsIcon from "@mui/icons-material/RunningWithErrors";
-import FlightTable from "./components/flightTable";
-import LoadingCard from "./components/loadingCard";
+import FlightTable from "./Components/FlightTable";
+import LoadingCard from "./Components/LoadingCard";
 // import GetVersions from "./components/getVersions";
 import { createClient } from 'contentful';
 // Icons
