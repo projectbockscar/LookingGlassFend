@@ -9,6 +9,7 @@ import image1 from "../Images/bockscar.PNG";
 import iosLogo from "../Images/ios.png";
 import OnlinePredictionIcon from "@mui/icons-material/OnlinePrediction";
 import { createClient } from "contentful";
+import WeatherWidget from './WeatherWidget'; 
 
 // Example: Versions for hard code compatibility if needed 
 // const appleVersion = "17.5";
@@ -158,6 +159,14 @@ const Header = (props) => {
               <OnlinePredictionIcon />
             </IconButton>
           </div>
+
+
+          <WeatherWidget />
+
+
+
+
+
           <div className={classes.rightSide}>
             <IconButton>
               <img src={iosLogo} height={25} width={22} alt="iOS Logo" />
