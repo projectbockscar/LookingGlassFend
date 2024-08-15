@@ -35,9 +35,9 @@ const WeatherWidget = () => {
 
     // Create and append the forecast day name (day of the week)
     const forecastDayName = document.createElement('span');
-    const dateStr = forecastDay.dt_txt; // Get the date string for the current forecast
-    forecastDayName.innerText = getDayOfWeek(dateStr); // Get the day of the week
-    forecastDayDiv.appendChild(forecastDayName); // Add the day name first
+    const dateStr = forecastDay.dt_txt; 
+    forecastDayName.innerText = getDayOfWeek(dateStr); 
+    forecastDayDiv.appendChild(forecastDayName); 
 
     // Create and append the forecast icon
     const forecastIcon = document.createElement('img');
@@ -91,12 +91,12 @@ const WeatherWidget = () => {
             if (nextDaysForecast.length === 4) break;
         }
 
-        setForecast(nextDaysForecast); // Save the forecast for later use
-        displayForecastDay(nextDaysForecast); // Display the first day immediately
+        setForecast(nextDaysForecast); 
+        displayForecastDay(nextDaysForecast); 
 
         // Set an interval to update the forecast display every 10 seconds
         const interval = setInterval(() => {
-          setCurrentDayIndex((prevIndex) => (prevIndex + 1) % nextDaysForecast.length); // Loop through available forecast days
+          setCurrentDayIndex((prevIndex) => (prevIndex + 1) % nextDaysForecast.length); 
           displayForecastDay(nextDaysForecast);
         }, 10000); // 10000 ms = 10 seconds
 
@@ -107,13 +107,13 @@ const WeatherWidget = () => {
 
   useEffect(() => {
     if (forecast.length > 0) {
-      displayForecastDay(forecast); // Display the first forecast day when the forecast state updates
+      displayForecastDay(forecast); 
     }
-  }, [forecast, currentDayIndex]); // Add currentDayIndex to dependencies
+  }, [forecast, currentDayIndex]); 
 
   if (!weatherData) return <div>Loading...</div>;
 
-  const temp = Math.ceil(weatherData.main.temp); // Round up for today's temperature
+  const temp = Math.ceil(weatherData.main.temp); 
   const weatherDescription = weatherData.weather[0].description;
   const icon = weatherData.weather[0].icon;
   const weatherIconUrl = `https://openweathermap.org/img/wn/${icon}@2x.png`;

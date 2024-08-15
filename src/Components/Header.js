@@ -160,12 +160,7 @@ const Header = (props) => {
             </IconButton>
           </div>
 
-
-          <WeatherWidget />
-
-
-
-
+            <WeatherWidget />
 
           <div className={classes.rightSide}>
             <IconButton>
