@@ -54,8 +54,8 @@ const WeatherWidget = () => {
     forecastElement.appendChild(forecastDayDiv);
   };
 
-  useEffect(() => {
-    // Fetch today's weather
+  // Function to fetch current weather
+  const fetchCurrentWeather = () => {
     const currentWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city},${countryCode}&appid=${apiKey}&units=imperial`;
 
     fetch(currentWeatherUrl)
@@ -64,6 +64,11 @@ const WeatherWidget = () => {
         setWeatherData(data);
       })
       .catch(error => console.error('Error fetching current weather:', error));
+  };
+
+  useEffect(() => {
+    // Fetch initial current weather
+    fetchCurrentWeather();
 
     // Fetch 5-day forecast
     const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city},${countryCode}&appid=${apiKey}&units=imperial`;
@@ -103,6 +108,11 @@ const WeatherWidget = () => {
         return () => clearInterval(interval); // Cleanup on unmount
       })
       .catch(error => console.error('Error fetching 5-day forecast:', error));
+
+    // Set an interval to update current weather every 15 minutes (900000 milliseconds)
+    const weatherInterval = setInterval(fetchCurrentWeather, 900000); // 900000 ms = 15 minutes
+
+    return () => clearInterval(weatherInterval); // Cleanup on unmount
   }, []); // Empty dependency array to run on mount
 
   useEffect(() => {
