@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import '../styles/WeatherC.css';
+import '../styles/WeatherC.css'; // Adjust path as needed
 
 const WeatherWidget = () => {
   const apiKey = '42ae5d5fe32aa654709605eba8c8786e';
@@ -19,16 +19,16 @@ const WeatherWidget = () => {
   };
 
   // Function to update the forecast display
-  const displayForecastDay = (forecasts) => {
-    if (forecasts.length === 0) return; 
-    const forecastDay = forecasts[currentDayIndex];
-    const temp = Math.ceil(forecastDay.main.temp); 
+  const displayForecastDay = (forecasts, index) => {
+    if (forecasts.length === 0) return; // Ensure there are forecasts to display
+    const forecastDay = forecasts[index];
+    const temp = Math.ceil(forecastDay.main.temp); // Round up
     const icon = forecastDay.weather[0].icon;
     const weatherIconUrl = `https://openweathermap.org/img/wn/${icon}@2x.png`;
 
     // Update the forecast display
     const forecastElement = document.getElementById('forecast');
-    forecastElement.innerHTML = ''; 
+    forecastElement.innerHTML = ''; // Clear previous content
 
     // Create a div for the current forecast
     const forecastDayDiv = document.createElement('div');
@@ -67,20 +67,19 @@ const WeatherWidget = () => {
       .catch(error => console.error('Error fetching current weather:', error));
   };
 
+  // Function to fetch forecast data
   const fetchForecastData = () => {
     const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city},${countryCode}&appid=${apiKey}&units=imperial`;
 
     fetch(forecastUrl)
       .then(response => response.json())
       .then(data => {
-        // Get the forecast for the next 5 days, excluding today
         const today = new Date();
         const forecasts = data.list.filter(item => {
           const forecastDate = new Date(item.dt_txt);
           return forecastDate.getDate() > today.getDate() || (forecastDate.getDate() === today.getDate() && forecastDate.getHours() >= 12);
         });
 
-        // Ensure we have the correct next 4 days
         const nextDaysForecast = [];
         let currentDay = today.getDate();
         for (let i = 0; i < forecasts.length; i++) {
@@ -89,20 +88,12 @@ const WeatherWidget = () => {
             nextDaysForecast.push(forecasts[i]);
             currentDay = forecastDate.getDate();
           }
-          // Stop after collecting 4 days
           if (nextDaysForecast.length === 4) break;
         }
 
         setForecast(nextDaysForecast);
-        displayForecastDay(nextDaysForecast);
-
-        // Set an interval to update the forecast display every 10 seconds
-        const interval = setInterval(() => {
-          setCurrentDayIndex((prevIndex) => (prevIndex + 1) % nextDaysForecast.length);
-          displayForecastDay(nextDaysForecast);
-        }, 10000); //10s
-
-        return () => clearInterval(interval);
+        setLastFetchedDate(today.getDate()); // Update the last fetched date
+        setCurrentDayIndex(0); // Reset the day index to start from the first forecast
       })
       .catch(error => console.error('Error fetching 5-day forecast:', error));
   };
@@ -112,25 +103,35 @@ const WeatherWidget = () => {
     fetchCurrentWeather();
     fetchForecastData();
 
-    // Set an interval to update current weather every 15 minutes (900000 milliseconds)
-    const weatherInterval = setInterval(fetchCurrentWeather, 900000); // 15 minutes
+    // Set an interval to update current weather every 15 minutes
+    const weatherInterval = setInterval(fetchCurrentWeather, 900000); // 900000 ms = 15 minutes
 
-    return () => clearInterval(weatherInterval); 
-  }, []); 
+    return () => clearInterval(weatherInterval); // Cleanup on unmount
+  }, []); // Empty dependency array to run on mount
 
   useEffect(() => {
-    const today = new Date();
-    if (today.getDate() !== lastFetchedDate) {
-      fetchForecastData(); 
-      setLastFetchedDate(today.getDate()); 
+    // Set an interval to rotate the forecast every 10 seconds
+    const forecastInterval = setInterval(() => {
+      setCurrentDayIndex(prevIndex => (prevIndex + 1) % forecast.length);
+    }, 10000); // 10000 ms = 10 seconds
+
+    return () => clearInterval(forecastInterval); // Cleanup on unmount
+  }, [forecast]); // Re-run when forecast data changes
+
+  useEffect(() => {
+    // Display the current forecast day
+    if (forecast.length > 0) {
+      displayForecastDay(forecast, currentDayIndex);
+    }
+  }, [currentDayIndex, forecast]);
+
+  useEffect(() => {
+    // Check if a new day has started
+    const today = new Date().getDate();
+    if (today !== lastFetchedDate) {
+      fetchForecastData(); // Fetch new forecast data
     }
   }, [lastFetchedDate]);
-
-  useEffect(() => {
-    if (forecast.length > 0) {
-      displayForecastDay(forecast);
-    }
-  }, [forecast, currentDayIndex]);
 
   if (!weatherData) return <div>Loading...</div>;
 
