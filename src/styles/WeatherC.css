@@ -23,7 +23,7 @@
 #today-weather h2 {
     font-size: 1em; 
     font-weight: bold; 
-    color: #fff; 
+    color: #000000; 
     margin-bottom: 1px; 
     margin-top: 8px; 
 }
@@ -45,14 +45,14 @@
 #weather-temp {
     font-size: 1em; 
     font-weight: bold;
-    color: #fff; 
+    color: #000000; 
     margin-right: 5px; 
 }
 
 #weather-description {
     font-size: 1em;
     font-weight: 600; 
-    color: #fff; 
+    color: #000000; 
 }
 
 
@@ -86,13 +86,22 @@
 .forecast-temp {
     font-size: 1.2em; 
     font-weight: bold; 
-    color: #fff;
+    color: #000000;
 }
 
 .forecast-day span {
     font-size: 1em; 
     font-weight: 600; 
-    color: #fff; 
+    color: #010000; 
     text-transform: capitalize; 
     margin-bottom: 1px; 
 }
+  
+  /* Default night background */
+  #weather-widget.night {
+    background: #2c3e50; /* Dark blue for night */
+  }
+
+  #weather-widget {
+    transition: background 0.5s ease-in-out;
+  }

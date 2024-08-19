@@ -18,6 +18,30 @@ const WeatherWidget = () => {
     return date.toLocaleDateString('en-US', options);
   };
 
+  // Function to get the background gradient based on weather description
+  const getBackgroundGradient = (description) => {
+    switch (description) {
+      case 'clear sky':
+        return 'linear-gradient(to right, #00a8f9, #d6ecff)'; // Blue sky with clouds
+      case 'few clouds':
+        return 'linear-gradient(to right, #3bc6f5, #efecec)'; // Light blue with some white
+      case 'scattered clouds':
+        return 'linear-gradient(to right, #aed4f5, #e4e7e6)'; // Light blue with scattered white
+      case 'broken clouds':
+        return 'linear-gradient(to right, #b0c4de, #f7f4f4)'; // Light gray-blue with white
+      case 'shower rain':
+        return 'linear-gradient(to right, #4e7693, #7f8c8d)'; // Rainy blue-gray
+      case 'rain':
+        return 'linear-gradient(to right, #3a4a5a, #7f8c8d)'; // Darker blue-gray for rain
+      case 'snow':
+        return 'linear-gradient(to right, #e5ebed, #dff3f8)'; // White with light gray for snow
+      case 'mist':
+        return 'linear-gradient(to right, #f0f8ff, #e0e0e0)'; // Misty light blue-gray
+      default:
+        return 'linear-gradient(to right, #038ce9, #e1ecf4)'; // Default gradient
+    }
+  };
+
   // Function to update the forecast display
   const displayForecastDay = (forecasts, index) => {
     if (forecasts.length === 0) return; // Ensure there are forecasts to display
@@ -132,6 +156,25 @@ const WeatherWidget = () => {
       fetchForecastData(); // Fetch new forecast data
     }
   }, [lastFetchedDate]);
+
+  useEffect(() => {
+    if (weatherData) {
+      const iconCode = weatherData.weather[0].icon;
+      const isNight = iconCode.endsWith('n');
+      const description = weatherData.weather[0].description;
+      const gradient = isNight ? null : getBackgroundGradient(description);
+      const widgetElement = document.getElementById('weather-widget');
+
+      if (isNight) {
+        widgetElement.classList.add('night');
+        widgetElement.classList.remove('day');
+      } else {
+        widgetElement.classList.add('day');
+        widgetElement.classList.remove('night');
+        widgetElement.style.background = gradient; // Apply gradient background for daytime
+      }
+    }
+  }, [weatherData]);
 
   if (!weatherData) return <div>Loading...</div>;
 
