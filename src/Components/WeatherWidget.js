@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import '../styles/WeatherC.css'; // Adjust path as needed
 
 const WeatherWidget = () => {
-  const apiKey = '42ae5d5fe32aa654709605eba8c8786e';
+  const apiKey = process.env.REACT_APP_API_KEY;
   const city = 'Omaha';
   const countryCode = 'US';
 
